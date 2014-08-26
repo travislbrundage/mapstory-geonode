@@ -18,68 +18,66 @@
 {% endblock %}
 
 {% block middle %}
-<div class="parallaxSlice" id="parallaxSlice1" data-stellar-background-ratio="0.5" style="background-image:url({% remote_content 'africa.gif' %});">
-    <div class="maskParent">
-        <div class="parallaxMask"></div>
-        <div class="parallaxText container">
-        </div>
-    </div>
-</div>
-
-<section class="slice" id="welcome" style="background-color:chocolate;opacity:0.8;position:absolute;z-index:3;width:100%;top:410px">
-    <div class="container">
-        <div class="row" style="padding-top:25px">
-            <div class="col-sm-12">
-                <h1  style="text-align:center;color:white;">The atlas of change that everyone can edit.</h1>
-            </div>
-        </div>
-        <div class="row" style="padding-top:10px">
-            <div class="input-group col-sm-6 col-sm-offset-3">
-                <input class="form-control " id="appendedInput" type="text" placeholder="Explore events, places, periods and storytellers" style="color:chocolate;background-color:whitesmoke;border:1px solid white">
-                <span class="input-group-addon" style="background-color:chocolate;color:white;border:1px solid white"><i class="icon-magnifier"></i></span>
-            </div>
-        </div>
-        <div class="row" style="padding-top:15px;padding-bottom:5px;">
-            <div style="text-align:center">
-                <span class="col-sm-3" style="border-right:1px solid #BD5E1B;font-size:22px;font-weight:100;padding:8px;background-color:chocolate;color:white">
-                    <a style="color:white" href="#">
-                        Sign up now
-                    </a>
-                </span>
-                <span class="col-sm-3" style="border-right:1px solid #BD5E1B;font-size:22px;font-weight:100;padding:8px;background-color:chocolate;color:white">
-                    <a style="color:white" href="#">
-                        Upload StoryLayers
-                    </a>
-                </span>
-                <span class="col-sm-3" style="border-right:1px solid #BD5E1B;font-size:22px;font-weight:100;padding:8px;background-color:chocolate;color:white">
-                    <a style="color:white" href="#">
-                        Create a MapStory
-                    </a>
-                </span>
-                <span class="col-sm-3" style="font-size:22px;font-weight:100;padding:8px;background-color:chocolate;color:white">
-                    <a style="color:white" href="#">
-                        Learn more
-                    </a>
-                </span>
-            </div>
-        </div>
-        <div class="row" style="padding-top:0px">
-            <h3 style="text-align:center;color:white;font-size:14px">
-                Quickly share open data and create MapStories about how the world changes over space and time - on any subject, at any geographic scale, and into the past, present or future.
-            </h3>
-        </div>
-        <div class="row" style="padding-bottom:5px">
-            <div class="localscroll" style="text-align:center">
-                <a href="#mapstories" class="btn btn-circle btn-sm btn-default" style="background-color:#BD5E1B;color:white;border:1px solid transparent;border-radius:25%">
-                    <i class="icon-down"></i></a>
-            </div>
-        </div>
-    </div>
-</section>
+<div style="position: absolute; top: -30px; height: 400px; width: 100%; overflow: hidden">     
+                <img src="{% remote_content 'africa.gif' %}" style="width: 100%;">
+                </img>
+                </div> 
+				
+				<section class="slice" id="welcome" style="position:absolute;z-index:3;background-color:grey;opacity:0.8;width:100%;height:350px;">
+                    
+					<div class="container">
+						<div class="row" style="padding-top:50px">
+							<div class="col-sm-12">
+								<h1  style="text-align:center;color:white;">The atlas of change that everyone can edit.</h1>
+							</div>
+						</div>
+						
+						
+						<div class="row" style="padding-top:10px">
+							<div class="input-group col-sm-6 col-sm-offset-3">
+                            	<input class="form-control " id="appendedInput" type="text" placeholder="Explore events, places, periods and storytellers" style="color:chocolate;background-color:whitesmoke;border:1px solid white">
+                                <span class="input-group-addon" style="background-color:chocolate;color:white;border:1px solid white"><i class="icon-magnifier"></i></span>
+                            </div>
+						</div>
+						<div class="row" style="padding-top:15px;padding-bottom:5px;">
+							<div style="text-align:center">
+								<span class="col-sm-3" style="border-right:1px solid #BD5E1B;font-size:22px;font-weight:100;padding:8px;background-color:grey;color:white">
+									<a style="color:white" href="#">
+										Sign Up
+									</a>
+										</span>
+								<span class="col-sm-3" style="border-right:1px solid #BD5E1B;font-size:22px;font-weight:100;padding:8px;background-color:grey;color:white">
+									<a style="color:white" href="#">
+										Upload Data
+									</a>
+								</span>
+								<span class="col-sm-3" style="border-right:1px solid #BD5E1B;font-size:22px;font-weight:100;padding:8px;background-color:grey;color:white">
+									<a style="color:white" href="#">
+										Edit StoryLayers
+									</a>
+								</span>
+								<span class="col-sm-3" style="font-size:22px;font-weight:100;padding:8px;background-color:grey;color:white">
+									<a style="color:white" href="#">
+										Compose a MapStory
+									</a>
+								</span>
+							</div>
+						</div>
+						
+						<div class="row" style="padding-top: 20px">
+							<h2 style="text-align:center; color:white; font-size:20px; font-weight:400">
+								Quickly share open data and create MapStories about how the world changes over space <br/> and time - on any subject, at any geographic scale, and into the past, present or future.
+							</h2>
+						</div>
+					</div>
+				</section>
 
 <section class="slice" id="mapstories" style="width:100%;height:475px;position:absolute;z-index:4;top:650px;padding-top:30px">
     <div class="container">
-        <nav id="filter" class="col-md-12 text-center" style="text-align:center">
+        <div class="col-sm-12">
+								<h1  style="text-align:center;color:black;">Featured MapStories</h1>
+        </div>
+        <nav id="filter" class="col-md-12 text-center" style="padding-top: 20px; text-align:center; margin-left: auto; margin-right:auto; width: 657px">
             <ul class="nav nav-tabs" >
                 <li><a href="" class="btn btn-filter btn-sm" data-filter="*" data-toggle="tab">All MapStories</a></li>
                 <li><a href="" class="btn btn-filter btn-sm" data-filter=".science">Science</a></li>
@@ -112,330 +110,124 @@
     </div>
 </section>
 
-<div class="parallaxSlice" id="parallaxSlice2" data-stellar-background-ratio="0.5" style="background-image:url({% remote_content 'theme-pics/teach1.jpg' %});">
-    <div class="maskParent">
-        <div class="parallaxMask"></div>
-        <div class="parallaxText container">
-        </div>
-    </div>
-</div>
-
-<section class="slice" id="getstarted" style="width:100%;height:500px;position:absolute;z-index:4;top:1425px">
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-4">
-                <blockquote class="bigTitle" style="text-align:right;font-weight:200">Get Started<br/></blockquote><h2 style="text-align:right">Everything happens somewhere at sometime. And everyone knows something about what’s happened in the world. MapStory turns data sitting on your desktop, in your brain, and within your networks and teams into an open educational resource that we all can learn from and use.</h2>
-            </div>
-            <div class="col-sm-8">
-                <div class="row" style="padding:20px">
-                    <div class="col-sm-3" style="text-align:center;padding:5px">
-                        <a href="getstarted.html#students">
-                            <img class="img-circle" src="{% remote_content 'students.png' %}" width="150" height="150">
-                            <h4>Students</h4>
-                        </a>
-                    </div>
-                    <div class="col-sm-3" style="text-align:center;padding:5px">
-                        <a href="getstarted.html#educators">
-                            <img class="img-circle" src="{% remote_content 'teachers.png' %}" width="150" height="150">
-                            <h4>Educators</h4>
-                        </a>
-                    </div>
-                    <div class="col-sm-3" style="text-align:center;padding:5px">
-                        <a href="getstarted.html#culturalgroups">
-                            <img class="img-circle" src="{% remote_content 'humanitarians.png' %}" width="150" height="150">
-                            <h4>Humanitarians</h4>
-                        </a>
-                    </div>
-                    <div class="col-sm-3" style="text-align:center;padding:5px">
-                        <a href="getstarted.html#business">
-                            <img class="img-circle" src="{% remote_content 'business.png' %}" width="150" height="150">
-                            <h4>Businesspeople</h4>
-                        </a>
-                    </div>
-                    <div class="col-sm-3" style="text-align:center;padding:5px">
-                        <a href="getstarted.html#natsecurity">
-                            <img class="img-circle" src="{% remote_content 'librarians.png' %}" width="150" height="150">
-                            <h4>Librarians</h4>
-                        </a>
-                    </div>
-                    <div class="col-sm-3" style="text-align:center;padding:5px">
-                        <a href="getstarted.html#researchers">
-                            <img class="img-circle" src="{% remote_content 'researchers.png' %}" width="150" height="150">
-                            <h4>Researchers</h4>
-                        </a>
-                    </div>
-                    <div class="col-sm-3" style="text-align:center;padding:5px">
-                        <a href="getstarted.html#policymakers">
-                            <img class="img-circle" src="{% remote_content 'policy.png' %}" width="150" height="150">
-                            <h4>Policy Makers</h4>
-                        </a>
-                    </div>
-                    <div class="col-sm-3" style="text-align:center;padding:5px">
-                        <a href="getstarted.html#journalists">
-                            <img class="img-circle" src="{% remote_content 'journalist.png' %}" width="150" height="150">
-                            <h4>Journalists</h4>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<div class="parallaxSlice" id="parallaxSlice3" data-stellar-background-ratio="0.5" style="background-image:url({% remote_content 'theme-pics/geog1.png' %})">
-    <div class="maskParent">
-        <div class="parallaxMask"></div>
-        <div class="parallaxText container">
-        </div>
-    </div>
-</div>
-
-<section class="slice color1" id="getinvolved" style="width:100%;height:500px;position:absolute;z-index:4;top:2225px">
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-8">
-                <div class="row" style="padding:20px">
-                    <div class="col-sm-3" style="text-align:center;padding:5px">
-                        <img class="img-circle" src="{% remote_content 'social/initiative.jpeg' %}" width="150" height="150">
-                        <h4>Host a Channel</h4>
-                    </div>
-                    <div class="col-sm-3" style="text-align:center;padding:5px">
-                        <img class="img-circle" src="{% remote_content 'social/share.jpg' %}" width="150" height="150">
-                        <h4>Launch an Initiative</h4>
-                    </div>
-                    <div class="col-sm-3" style="text-align:center;padding:5px">
-                        <img class="img-circle" src="{% remote_content 'social/launch.jpg' %}" width="150" height="150">
-                        <h4>Share your skills </h4>
-                    </div>
-                    <div class="col-sm-3" style="text-align:center;padding:5px">
-                        <img class="img-circle" src="{% remote_content 'social/edit.jpg' %}" width="150" height="150">
-                        <h4>Become an Editor</h4>
-                    </div>
-                    <div class="col-sm-3" style="text-align:center;padding:5px">
-                        <img class="img-circle" src="{% remote_content 'social/chapter.jpg' %}" width="150" height="150">
-                        <h4>Found a Chapter</h4>
-                    </div>
-                    <div class="col-sm-3" style="text-align:center;padding:5px">
-                        <img class="img-circle" src="{% remote_content 'social/code.jpg' %}" width="150" height="150">
-                        <h4>Code for MapStory</h4>
-                    </div>
-                    <div class="col-sm-3" style="text-align:center;padding:5px">
-                        <img class="img-circle" src="{% remote_content 'social/initiative.jpeg' %}" width="150" height="150">
-                        <h4>Organize an Event or Training</h4>
-                    </div>
-                    <div class="col-sm-3" style="text-align:center;padding:5px">
-                        <img class="img-circle" src="{% remote_content 'social/edit.jpg' %}" width="150" height="150">
-                        <h4>Become a sponsor</h4>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-4">
-                <blockquote class="bigTitle" style="text-align:left;font-weight:200">Get Involved<br/></blockquote>
-                <h2 style="text-align:left">
-                    Join with your neighbors, or collaborators on another continent, to launch initiatives, help others, write code and govern the mapstory.org platform. We’re a community, not a company.
-                </h2>
-            </div>
-        </div>
-    </div>
-</section>
-
-<div class="parallaxSlice" id="parallaxSlice4" data-stellar-background-ratio="0.5" style="background-image:url({% remote_content 'theme-pics/teach2.jpg' %})">
-    <div class="maskParent">
-        <div class="parallaxMask"></div>
-        <div class="parallaxText container">
-        </div>
-    </div>
-</div>
-
-<section class="slice color1" id="getskills" style="width:100%;height:500px;position:absolute;z-index:4;top:3025px">
-    <div class="container">
-        <div class="row">
-            <blockquote class="bigTitle" style="text-align:center;font-weight:200">Get Skills<br/></blockquote>
-            <h2 style="text-align:center">
-                MapStory is for everyone, not just web developers and GIS experts. We work hard to get you the help you need to improve and succeed.
-
-            </h2>
-        </div>
-        <hr/>
-        <div class="row">
-            <section>
-                <div class="container">
-                    <div class="row">
-                        <div class="col-sm-4" style="text-align:center;border-right:1px solid gainsboro">
-                            <img class="img-circle" src="{% remote_content 'social/students.jpg' %}" width="80" height="80">
-                            <h2 style="font-size:1.6em;padding-top:10px">1. MapStory 101</h2>
-                            <hr style="margin:10px">
-                            <h4>Lorem ipsum dolor sit amet modus utroque patrioque pro et, in zril maiorum voluptatibus nec. Ad augue qualisque mel, pri vidit ferri in. In idque concludaturque pri.</h4>
+<section class="slice" id="getstarted" style="width:100%;height:900px;position:absolute;z-index:4;top:900px; background-color: #F0F0F0">
+					<div class="container">
+						<div class="row">
+								<h1 style="text-align:left;font-weight:200; padding-top:50px; padding-bottom: 25px"><span style="font-weight: 400; color: #BD5E1B">Share</span> what you see changing in our complex world.<br/></h1>
+                            <h2 style="text-align:left">Everyone has expertise to share. MapStory empowers you to <span style="font-weight:600">show</span> others what you see changing in our world, and <span style="font-weight:600">tell</span> them why it matters.</h2>
                         </div>
-                        <div class="col-sm-4" style="text-align:center;border-right:1px solid gainsboro">
-                            <img class="img-circle" src="{% remote_content 'social/students.jpg' %}" width="80" height="80">
-                            <h2 style="font-size:1.6em;padding-top:10px">2. MapStory Wiki</h2>
-                            <hr style="margin:10px">
-                            <h4>Lorem ipsum dolor sit amet modus utroque patrioque pro et, in zril maiorum voluptatibus nec. Ad augue qualisque mel, pri vidit ferri in. In idque concludaturque pri.</h4>
+                        <div class="row">
+                            <div style="text-align:center;padding:5px; margin-top: 75px; float: left;">
+								<img class="img-circle" src="{% remote_content 'images/profpic.jpg' %}" width="400" height="400">
+				            </div>
+                            <div style="text-align:center;padding:5px; position: relative; top: 250px; left: 20px; width: 100%">
+								<h3 style="font-weight: 100; letter-spacing: 0px">Jeremiah, a 9th grade teacher at Xavier High School in Florida, is working with his students to map the spread of invasive pythons across the state. Check out his work <a href="#">here</a>. Or, see what other <a href="#">journalists</a>, <a href="#">librarians</a>, <a href="#">policymakers</a>, <a href="#">scholars</a>, <a href="#">teachers</a>, <a href="#">business leaders</a>, and <a href="#">humanitarians</a> are up to…</h3>
+				            </div>
                         </div>
-                        <div class="col-sm-4" style="text-align:center">
-                            <img class="img-circle" src="{% remote_content 'social/students.jpg' %}" width="80" height="80">
-                            <h2 style="font-size:1.6em;padding-top:10px">3. Help Center</h2>
-                            <hr style="margin:10px">
-                            <h4>Lorem ipsum dolor sit amet modus utroque patrioque pro et, in zril maiorum voluptatibus nec. Ad augue qualisque mel, pri vidit ferri in. In idque concludaturque pri.</h4>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </div>
-    </div>
-</section>
+							
+						</div>
+				</section>
 
-<div class="parallaxSlice" id="parallaxSlice5" data-stellar-background-ratio="0.5" style="background-image:url({% remote_content 'theme-pics/teach2.jpg' %})">
-    <div class="maskParent">
-        <div class="parallaxMask"></div>
-        <div class="parallaxText container">
-        </div>
-    </div>
-</div>
+<section class="slice color1" id="getinvolved" style="width:100%;height:900px;position:absolute;z-index:4;top:1800px; background-color:white">
+					<div class="container">
+						<div class="row">
+								<h1 style="text-align:right;font-weight:200; padding-top:50px; padding-bottom:25px"><span style="font-weight: 400; color: #BD5E1B">Contribute</span> to massive data collection initiatives.<br/></h1>
+								<h2 style="text-align:right">
+									Good MapStories are powered by good data. MapStory’s ‘crowd-editing’ ability enables large groups to quickly collect, and continuously improve, spatiotemporal data on any subject. 
+								</h2>
+						</div>
+                        
+                        <div class="row"  style="margin-top: 55px; background-color: #FAFAFF; padding: 20px">
+				            
+                            <div style="text-align:center;padding:5px; float: right;">
+								<img class="img-circle" src="{% remote_content 'social/code.jpg' %}" width="400" height="400">
+				            </div>
+                            <div style="text-align:center;padding:5px; position: relative; top: 55px; left: -5px; width: 100%">
+                                <h1 style="text-align:center;color:black;">Featured Initiative</h1>
+                                <h2 style="text-align:center;color:black;font-style: italic; margin-top: 25px">Borders & Annexations</h2>
+								<h3 style="font-weight: 100; letter-spacing: 0px">Sponsored by the Sunlight Foundation and kickstarted by Karl Phillips, this initiative aims to map municipal border changes throughout U.S. history, showcasing the development of cities and towns. Contribute to an initiative or start a new one today! </h3>
+                                <button type="button" class="btn btn-default" style="color: black; font-weight: 400; margin-top: 50px;">
+                                    Contribute to an initiative &#8594
+                                </button>
+				            </div>
+                        </div>
+							
+					</div>
+				</section>
 
-<section class="slice color1" id="thinkers" style="width:100%;height:500px;position:absolute;z-index:4;top:3825px">
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-8">
-                <div class="row" style="padding:20px">
-                    <div class="col-sm-3" style="text-align:center;padding:5px">
-                        <img class="img-circle" src="{% remote_content 'avatar.jpg' %}" width="150" height="150">
-                        <h4>Mafalda Hopkirk</h4>
-                    </div>
-                    <div class="col-sm-3" style="text-align:center;padding:5px">
-                        <img class="img-circle" src="{% remote_content 'avatar.jpg' %}" width="150" height="150">
-                        <h4>Lee Jordan</h4>
-                    </div>
-                    <div class="col-sm-3" style="text-align:center;padding:5px">
-                        <img class="img-circle" src="{% remote_content 'avatar.jpg' %}" width="150" height="150">
-                        <h4>Millicent Bullstrode</h4>
-                    </div>
-                    <div class="col-sm-3" style="text-align:center;padding:5px">
-                        <img class="img-circle" src="{% remote_content 'avatar.jpg' %}" width="150" height="150">
-                        <h4>Penelope Clearwater</h4>
-                    </div>
-                    <div class="col-sm-3" style="text-align:center;padding:5px">
-                        <img class="img-circle" src="{% remote_content 'avatar.jpg' %}" width="150" height="150">
-                        <h4>Nymphadora Tonks</h4>
-                    </div>
-                    <div class="col-sm-3" style="text-align:center;padding:5px">
-                        <img class="img-circle" src="{% remote_content 'avatar.jpg' %}" width="150" height="150">
-                        <h4>Remus Lupin</h4>
-                    </div>
-                    <div class="col-sm-3" style="text-align:center;padding:5px">
-                        <img class="img-circle" src="{% remote_content 'avatar.jpg' %}" width="150" height="150">
-                        <h4>Seamus Finnigan</h4>
-                    </div>
-                    <div class="col-sm-3" style="text-align:center;padding:5px">
-                        <img class="img-circle" src="{% remote_content 'avatar.jpg' %}" width="150" height="150">
-                        <h4>Xenophilius Lovegood</h4>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-4">
-                <blockquote class="bigTitle" style="text-align:left;font-weight:200">Thinkers and Thoughts<br/></blockquote>
-                <h2 style="text-align:left">Human beings are the only animals who write down their thoughts – so far! Here’s what a few MapStorytellers have been thinking about lately. For more, go to <a href="userdiary.html">User Diaries.</a>
-                </h2>
-            </div>
-        </div>
+<section class="slice color1" id="thinkers" style="width:100%;height:900px;position:absolute;z-index:4;top:2700px; background-color:#F0F0F0">
+					<div class="container">
+						<div class="row">
+								<h1 style="text-align:left;font-weight:200; padding-top:50px; padding-bottom:25px; line-height: 120%"><span style="font-weight: 400; color: #BD5E1B">Advance</span> thoughtful civic dialogue about our shared past, present and future<br/></h1>
+								<h2 style="text-align:left">The internet is often a polarizing echo-chamber, but it doesn’t have to be. MapStory enables different data and perspectives to co-exist and improve based on feedback.
+								</h2>
+                            </div>
+                            <div class="row" style="margin-top: 60px">
+                            
+                                
+                                <div class="col-sm-4" style="float: left; background-color: #F9F9FF"><h2 style="font-weight: 400">MapStories in the Media<br/><br/></h2><a href="http://www.washingtonpost.com/blogs/wonkblog/wp/2014/06/23/a-hundred-years-of-american-politics-in-one-gif/">A hundred years of American politics, in one GIF &#8594</a><br/><i>Washington Post</i>
+                                <br/><br/>
+                                <a href="http://bikeportland.org/2014/08/11/monday-roundup-beauty-cleveland-dancing-seine-109942">Expansion of bike lanes in Portland, OR &#8594</a><br/><i>Bike Portland</i>
+                                
+                                </div>
+                                <div class="col-sm-4" style="float: right;  background-color: #F9F9FF"><h2 style="font-weight: 400;">Recent Tweets</h2><br/><span style="font-weight: 600">@MapStory</span> Great read, http://bit.ly/1p4kznH.There's still a few WWW projects out there fighting in the spirit of @timberners_lee. We're one of them. &#8594<br/><br/><span style="font-weight: 600">@MapStory</span> Great chance to learn @Mapbox studio tonight @MaptimeDC, 6:30 at #MLK library Dream Lab @DCPL! http://www.meetup.com/Maptime-DC/events/196191172/ … &#8594</div>
+                                <div class="col-sm-4" style="float: none; margin-left: auto; margin-right: auto; background-color: #F7F7FD"><div style="width:70%"><h2 style="font-weight: 400;">Reflections from the community journal</h2></div></div>
+                                
+                            
+<!--
+                            <a class="twitter-timeline" href="https://twitter.com/MapStory" data-widget-id="504024841112924160">Tweets by @MapStory</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+-->
 
-    </div>
-</section>
 
-<div class="parallaxSlice" id="parallaxSlice6" data-stellar-background-ratio="0.5" style="background-image:url({% remote_content 'theme-pics/teach2.jpg' %})">
-    <div class="maskParent">
-        <div class="parallaxMask"></div>
-        <div class="parallaxText container">
-        </div>
-    </div>
-</div>
+						  </div>
+							
+						</div>
+				</section>
 
-<section class="slice color1" id="news" style="background-color:white;width:100%;height:600px;position:absolute;z-index:4;top:4625px">
-    <div class="container">
-        <div class="row">
-            <blockquote class="bigTitle" style="text-align:center;font-weight:200">In the News<br/></blockquote>
-            <h2 style="text-align:center">
-                We are making headlines all over the world.
-            </h2>
-        </div>
-        <hr/>
-        <div class="row">
-            <section>
-                <div class="container">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <iframe frameborder="0" width="500" height="350" src="http://mapstory.tweetwally.com/embed" target="_blank" align="center" scrolling="Auto"></iframe>
+<img src="images/P7172229.jpg" style="position:absolute;z-index:3;top:3600px; width: 100%; height: auto; opacity: 0.7"></img>
+
+				<section class="slice" id="join" style="width:100%;height:700px;position:absolute;z-index:4;top:3600px; background-color:transparent">
+					<div class="container" style="padding: 20px; margin-top: 30px;z-index:4;  background-color:rgba(200,200,215, 0.4)">
+                        <h1 style="text-align:right;font-weight:200; color: black; padding-bottom:25px; line-height: 120%">And <span style="font-weight: 400; color: white">join</span> a growing global network striving to get better all the time.<br/></h1>
+                        <div style="float:right;">
+                            <button type="button" class="btn btn-default" style="color: black; font-weight: 400">
+                                Add your voice. <span style="color: white">Sign up.</span>
+                            </button>
                         </div>
-                        <div class="col-sm-6">
-                            <h2>Lorem ipsum headline <small class="pull-right">04-15-2014</small></h2>
-                            <p>
-                                Lorem ipsum dolor sit amet modus utroque patrioque pro et, in zril maiorum voluptatibus nec. Ad augue qualisque mel, pri vidit ferri in. In idque concludaturque pri. Albucius officiis eu mel, meis ipsum summo ei his, dicit nostrud molestiae has ne.
-                            </p>
-                            <hr>
-                            <h2>Lorem ipsum headline <small class="pull-right">04-15-2014</small></h2>
-                            <p>
-                                Lorem ipsum dolor sit amet modus utroque patrioque pro et, in zril maiorum voluptatibus nec. Ad augue qualisque mel, pri vidit ferri in. In idque concludaturque pri. Albucius officiis eu mel, meis ipsum summo ei his, dicit nostrud molestiae has ne.
                         </div>
+					</div>
+				</section>
+
+                <section id="sponsors" style="width: 100%; height: 300px; position:absolute; z-index:4; top:4300px; background-color: white">
+                    <div class="container">
+                        <h1 style="text-align:left;font-weight:200; padding-top:15px; padding-bottom:25px; line-height: 120%">And <span style="font-weight: 400; color: #BD5E1B">thanks</span> to our sponsors:<br/></h1>
+                        <div class="row">
+								<div class="container">
+									<div class="row">
+										<div class="col-sm-2">
+											<img class="img-responsive" style="width: 100px; height: auto; position: relative; top: -25px" src="{% remote_content 'logos/ace.png' %}" />
+										</div>
+										<div class="col-sm-2">
+											<img class="img-responsive img-square" style="width: 100px; height: auto; position: relative; top: -25px" src="{% remote_content 'logos/nara.png' %}" />
+										</div>
+										<div class="col-sm-2">
+											<img class="img-responsive img-square" style="width: 100px; height: auto; position: relative; top: -25px" src="{% remote_content 'logos/neh.png' %}" />
+										</div>
+										<div class="col-sm-2">
+											<img class="img-responsive img-square" style="width: 100px; height: auto; position: relative; top: -25px" src="{% remote_content 'logos/dcpl.png' %}" />
+										</div>
+										<div class="col-sm-2">
+											<img class="img-responsive img-square" style="width: 100px; height: auto; position: relative; top: -25px" src="{% remote_content 'logos/sf.png' %}" />
+										</div>
+										<div class="col-sm-2">
+											<img class="img-responsive img-square" style="width: 100px; height: auto; position: relative; top: -25px" src="{% remote_content 'logos/nsf.png' %}" />
+										</div>
+									</div>
+								</div>
+						</div>
                     </div>
-                </div>
-            </section>
-        </div>
-    </div>
-</section>
 
-<div class="parallaxSlice" id="parallaxSlice7" data-stellar-background-ratio="0.5" style="background-image:url({% remote_content 'theme-pics/teach2.jpg' %})">
-    <div class="maskParent">
-        <div class="parallaxMask"></div>
-        <div class="parallaxText container">
-        </div>
-    </div>
-</div>
-
-<section class="slice" id="sponsors" style="width:100%;height:450px;position:absolute;z-index:4;top:5525px;background-color:white">
-    <div class="container">
-        <div class="row">
-            <blockquote class="bigTitle" style="text-align:center;font-weight:200">Our Sponsors<br/></blockquote>
-            <h2 style="text-align:center">
-                Learning institutions like these drive innovation in the MapStory codebase, content and community. Join them.
-            </h2>
-        </div>
-        <hr/>
-        <div class="row">
-            <section>
-                <div class="container">
-                    <div class="row">
-                        <div class="col-sm-2">
-                            <img class="img-responsive" src="{% remote_content 'logos/ace.png' %}" />
-                        </div>
-                        <div class="col-sm-2">
-                            <img class="img-responsive img-square" src="{% remote_content 'logos/nara.png' %}" />
-                        </div>
-                        <div class="col-sm-2">
-                            <img class="img-responsive img-square" src="{% remote_content 'logos/neh.png' %}" />
-                        </div>
-                        <div class="col-sm-2">
-                            <img class="img-responsive img-square" src="{% remote_content 'logos/dcpl.png' %}" />
-                        </div>
-                        <div class="col-sm-2">
-                            <img class="img-responsive img-square" src="{% remote_content 'logos/sf.png' %}" />
-                        </div>
-                        <div class="col-sm-2">
-                            <img class="img-responsive img-square" src="{% remote_content 'logos/nsf.png' %}" />
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </div>
-    </div>
-</section>
-
-<div class="parallaxSlice" id="parallaxSlice8" data-stellar-background-ratio="0.5" style="background-image:url({% remote_content 'theme-pics/teach2.jpg' %})">
-    <div class="maskParent">
-        <div class="parallaxMask"></div>
-        <div class="parallaxText container">
-        </div>
-    </div>
-</div>
+                </section>
 
 {% endblock %}
