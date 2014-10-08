@@ -2,6 +2,7 @@
   var module = angular.module('ngBoilerplate', [
     'templates-app',
     'templates-common',
+    'geonode_main_search',
     'loom',
     'ui.bootstrap',
     'ui.router',

@@ -1,0 +1,66 @@
+{% load i18n %}
+<div class="panel-heading">
+    <div class="panel-title">Add a Layer</div>
+    <form>
+        <fieldset>
+            <div class="input-group">
+                <input name="text_search_input" id="text_search_input" ng-model="text_query" type="text"
+                   placeholder="Search by text" class="form-control">
+                <span class="input-group-btn">
+                    <button class="btn btn-primary" type="submit" id="text_search_btn"><i class="glyphicon glyphicon-search"></i></button>
+                </span>
+            </div>
+            <div class="btn-group">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    Sort By <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" id="sort">
+                    <li><a data-value="-date" data-filter="order_by" class="selected" ng-click="single_choice_listener($event)">{% trans "Most recent" %}</a></li>
+                    <li><a data-value="date" data-filter="order_by" ng-click="single_choice_listener($event)">{% trans "Less recent" %}</a></li>
+                    <li><a data-value="title" data-filter="order_by" ng-click="single_choice_listener($event)">{% trans "A - Z" %}</a></li>
+                    <li><a data-value="-title" data-filter="order_by" ng-click="single_choice_listener($event)">{% trans "Z - A" %}</a></li>
+                    <li><a data-value="-popular_count" data-filter="order_by" ng-click="single_choice_listener($event)">{% trans "Most popular" %}</a></li>
+                </ul>
+            </div>
+        </fieldset>
+        <fieldset>
+            <label>Show expanded</label>
+            <input id="show-meta-info" type="checkbox" checked>
+        </fieldset>
+        <fieldset>
+            <label>Limit search to map extent</label>
+            <input id="current-extent" type="checkbox">
+        </fieldset>
+        <fieldset>
+            <label>Limit search to current time range</label>
+            <input id="current-time" disabled type="checkbox">
+        </fieldset>
+        <fieldset>
+            <span>Total: </span>
+            <span ng-bind="total_counts"></span>
+            <a href><span class="glyphicon glyphicon-chevron-left" ng-click="paginate_down()"></span></a>
+            <span>page </span>
+            <span ng-model="page" ng-bind="page"></span>
+            <span> of </span>
+            <span ng-bind="numpages"></span>
+            <a href><span class="glyphicon glyphicon-chevron-right" ng-click="paginate_up()"></span></a>
+        </fieldset>
+    </form>
+</div>
+<div class="panel-body">
+    <ul class="list-group" id="ms-search-layers">
+        {% verbatim %}
+        <li ng-repeat="item in results" class="list-group-item clearfix">
+            <div class="col-md-4">
+              <a href="{{ item.detail_url }}"><img class="thumb" ng-src="{{ item.thumbnail_url }}" /></a>
+            </div>
+            <div class="col-md-8">
+              <h4><a href="{{ item.detail_url }}">{{ item.title }}</a> <span class="owner">{{ item.owner.username }}</span></h4>
+              <p>{{ item.category.gn_description }}</p>
+              <p class="abstract">{{ item.abstract|limitTo:250 }}...</p>
+            </div>
+        </li>
+        {% endverbatim %}
+    </ul>
+    <button class="btn btn-primary" id="done">Done</button>
+</div>

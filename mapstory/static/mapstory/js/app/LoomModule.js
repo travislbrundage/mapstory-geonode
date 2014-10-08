@@ -27,5 +27,8 @@
     'loom_search',
     'loom_test',
     'loom_timeline'
-  ]);
+  ]).constant('Configs', {
+    url: SEARCH_URL,
+    disableQuerySync: true
+  });
 }());

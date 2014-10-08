@@ -3,9 +3,33 @@
 
 {% block styles %}
 <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}maploom/vendor/ol3/ol.css"/>
+<style type="text/css">
+/*    #layerssearch {
+        top: 10px;
+        height: 80%;
+        width: 50%;
+        padding: 10px;
+        background: white;
+        margin: 0 25%;
+        position: absolute;
+        top: 0;
+        z-index: 1000;
+    }*/
+    #layerssearch .selected {
+        color: orange;
+    }
+/*    #ms-search-layers {
+        max-height: 40%;
+        overflow-y: auto;
+    }*/
+</style>
 {% endblock %}
 
 {% block scripts %}
+<script type="text/javascript">
+  var CLOSURE_NO_DEPS = true;
+</script>
+{% include 'maps/_map_view_search_scripts.html' %}
 {% include 'maps/_maploom_scripts.html' %}
 <script type="text/javascript">
 {% get_current_language as language %}
@@ -93,4 +117,15 @@ goog.object.extend( config, {{ config|safe }});
         </div>
     </div>
 </div>
+
+{% comment %}
+<div id="layerssearch" class="panel" ng-controller="MainController">
+  {% with include_type_filter='true' %}
+  {% with facet_type='layers' %}
+  {% include "maps/_map_view_search.html" %}
+  {% endwith %}
+  {% endwith %}
+</div>
+{% endcomment %}
+
 {% endblock %}
