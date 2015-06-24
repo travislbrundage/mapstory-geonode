@@ -122,6 +122,7 @@ class GetPageContent(ContentMixin):
     external_link = models.URLField(blank=True)
     page = models.ForeignKey(GetPage, related_name='contents')
     order = models.IntegerField(blank=True, default=0)
+    video = models.FileField(upload_to='getpage')
 
     class Meta:
         ordering = ['order']
