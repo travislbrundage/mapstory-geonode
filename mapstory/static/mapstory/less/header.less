@@ -1,0 +1,37 @@
+/* ===HEADER ==== */
+#quick-search {
+	padding-top: 7px;
+}
+
+/* Media Queries
+   ----------------------------- */
+@media (max-width: 1200px) {
+	.full-display {
+		display: none !important;
+	}
+	#hamburger-display {
+		padding: 15px 10px 10px 10px;
+	}
+	.navbar-header {
+		float: left;
+	}
+}
+
+@media (min-width: 0px) {
+	.full-display {
+		display: block !important;
+		float: right !important;
+	}
+}
+
+@media (min-width: 1200px) {
+	#hamburger-display {
+		display: none;
+	}
+}
+
+@media (max-width: 600px) {
+	#quick-search {
+		display: none;
+	}	
+}
