@@ -25,11 +25,14 @@
         <div class="row">
 
             <div class="col-sm-5">
+                {% if entry.video_embed_link %}
+                <iframe width="380" height="320" src="{{ entry.video_embed_link }}">
+                </iframe>
+                {% else %}
                 <video width="380" height="320" controls>
-                    <source src="images/theme-pics/lake.mp4" type="video/mp4">
+                    <source src="/uploaded/{{ entry.video }}" type="video/{{ entry.extension }}">
                 </video>
-
-                {# link entry.main_link entry.title 400 300 #}
+                {% endif %}
             </div>
             <div class="col-sm-7">
                 <blockquote class="bigTitle" style="text-align:left;font-weight:200">{{ entry.title }}<br/></blockquote>
