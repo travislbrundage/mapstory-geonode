@@ -10,8 +10,20 @@
         'storytools.edit.pins',
         'storytools.core.ogc',
         'colorpicker.module',
+        'geonode_main_search',
         'ui.bootstrap'
     ]);
+
+    module.config(['$httpProvider', function($httpProvider) {
+        $httpProvider.defaults.xsrfCookieName = 'csrftoken';
+        $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
+    }]);
+
+
+    module.constant('Configs', {
+            url: SEARCH_URL,
+            disableQuerySync: true
+    });
 
     module.run(function() {
         // install a watchers debug loop
@@ -44,16 +56,26 @@
 
     var servers = [
         {
-            name: 'mapstory',
+            name: 'Explore All',
             path: '/geoserver/',
-            absolutePath: 'http://mapstory.org/geoserver/',
-            canStyleWMS: false,
+            absolutePath: 'http://mapstory.beta.boundlessgeo.com/geoserver/',
+            canStyleWMS: true,
             timeEndpoint: function(name) {
                 return '/maps/time_info.json?layer=' + name;
             }
         },
         {
-            name: 'local',
+            name: 'Common',
+            path: '/geoserver/',
+            canStyleWMS: true
+        },
+        {
+            name: 'My Favorites',
+            path: '/geoserver/',
+            canStyleWMS: true
+        },
+        {
+            name: 'My Uploads',
             path: '/geoserver/',
             canStyleWMS: true
         }
@@ -111,6 +133,18 @@
         };
         this.saveMap = function() {
             var config = this.storyMap.getState();
+
+            var mapLoad = $http.post("new/data", config).success(function(data) {
+                    stEditableStoryMapBuilder.modifyStoryMap(self.storyMap, data);
+
+                }).error(function(data, status) {
+                    if (status === 401) {
+                        window.console.warn('Not authorized to see map ' + mapId);
+                        stStoryMapBaseBuilder.defaultMap(self.storyMap);
+                    }
+                });
+
+
             stMapConfigStore.saveConfig(config);
             stAnnotationsStore.saveAnnotations(this.storyMap.get('id'), StoryPinLayerManager.storyPins);
         };
@@ -201,7 +235,7 @@
         return $injector.instantiate(MapManager);
     });
 
-    module.directive('addLayers', function($modal, $log, MapManager) {
+    module.directive('addLayers', function($modal, $log, MapManager, loadSearchDialog) {
         return {
             restrict: 'E',
             scope: {
@@ -213,6 +247,21 @@
                     active: servers[0]
                 };
                 scope.servers = servers;
+
+                scope.showLoadSearchDialog = function() {
+                    var promise = loadSearchDialog.show();
+                    promise.then(function(results) {
+
+                        if (results) {
+
+                            angular.forEach(results, function(layerName) {
+                                       MapManager.addLayer(layerName,false, servers[0]);
+                            });
+                        }
+                    });
+                };
+
+
                 scope.addLayer = function() {
                     scope.loading = true;
                     MapManager.addLayer(this.layerName, this.asVector, scope.server.active).then(function() {
@@ -235,6 +284,7 @@
             }
         };
     });
+
     module.directive('layerList', function(stStoryMapBaseBuilder, stEditableStoryMapBuilder, MapManager) {
         return {
             restrict: 'E',
@@ -312,6 +362,74 @@
             show: show
         };
     });
+
+
+    module.service('loadNewMapDialog', function($modal, $rootScope, stMapConfigStore) {
+        function show() {
+            var scope = $rootScope.$new(true);
+            scope.choice = {};
+            return $modal.open({
+                templateUrl: 'templates/load-new-map-dialog.html',
+                scope: scope
+            }).result.then(function() {
+                return scope.choice;
+            });
+        }
+        return {
+            show: show
+        };
+    });
+
+    module.service('loadSearchDialog', function($modal, $rootScope, stMapConfigStore) {
+        function show() {
+            var scope = $rootScope.$new(true);
+
+            scope.choices = [];
+
+            scope.result_select = function($event, layer){
+                var element = $($event.target);
+
+                //TODO: would prefer to call layer.name but arg is base_resourcebase
+                //instead need to parse the name from the url
+
+                var layerName = decodeURIComponent(layer.detail_url);
+
+                if(layerName.indexOf('/layers/') > -1){
+                    layerName = layerName.replace("/layers/","");
+                }
+
+
+                var box = $(element.parents('.box')[0]);
+
+                if (box.hasClass('resource_selected')){
+                    var index = scope.choices.indexOf(layerName);
+
+                    if (index > -1) {
+                        scope.choices.splice(index, 1);
+                    }
+
+                    element.html('Select');
+                    box.removeClass('resource_selected');
+                }
+                else{
+                    scope.choices.push(layerName);
+                    element.html('Deselect');
+                    box.addClass('resource_selected');
+                }
+            };
+
+            return $modal.open({
+                templateUrl: 'templates/load-search-dialog.html',
+                scope: scope
+            }).result.then(function() {
+                return scope.choices;
+            });
+        }
+        return {
+            show: show
+        };
+    });
+
     module.controller('tileProgressController', function($scope) {
         $scope.tilesToLoad = 0;
         $scope.tilesLoadedProgress = 0;
@@ -334,7 +452,7 @@
     });
 
     module.controller('composerController', function($scope, $injector, MapManager, TimeControlsManager,
-        styleUpdater, loadMapDialog, $location) {
+        styleUpdater, loadMapDialog, loadNewMapDialog, loadSearchDialog, $location) {
 
         $scope.mapManager = MapManager;
         $scope.timeControlsManager = $injector.instantiate(TimeControlsManager);
@@ -347,8 +465,20 @@
             MapManager.saveMap();
         };
         $scope.newMap = function() {
-            $location.path('/new');
+           // $location.path('/new');
+
+
+            var promise = loadNewMapDialog.show();
+            promise.then(function(result) {
+                if (result.title) {
+
+                    console.log(result.title);
+                } else{
+                    console.log(result);
+                }
+            });
         };
+
         $scope.styleChanged = function(layer) {
             styleUpdater.updateStyle(layer);
         };
@@ -359,6 +489,18 @@
                     $location.path('/maps/' + result.mapstoryMapId + "/data/");
                 } else if (result.localMapId) {
                     $location.path('/local/' + result.localMapId);
+                }
+            });
+        };
+        $scope.showLoadSearchDialog = function() {
+            var promise = loadSearchDialog.show();
+            promise.then(function(results) {
+
+                if (results) {
+
+                    angular.forEach(results, function(layerName) {
+                               MapManager.addLayer(layerName,false, servers[0]);
+                    });
                 }
             });
         };
