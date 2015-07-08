@@ -87,13 +87,14 @@
                     <span class="label label-default">+ <span contenteditable="true">add</span></span>
                     <hr style="margin-top:15px;margin-bottom:10px">
                     <h3 style="margin-top:0px;margin-bottom:5px;">
-                            <article id="rate" class="tab-pane">
-        {% if request.user.is_authenticated %}
-        <h4>{% trans "Rate this layer" %}</h4>
-        {% user_rating request.user resource "layer" as user_layer_rating %}
-        <div id="user_rating" class="category-layer" data-score="{{ user_layer_rating }}"></div>
-        {% endif %}        
-      </article>
+                      <article id="rate" class="tab-pane">
+                        {% if request.user.is_authenticated %}
+                        <h4>{% trans "Rate this layer" %}</h4>
+                        {% user_rating request.user resource "layer" as user_layer_rating %}
+                        <div id="user_rating" class="category-layer" data-score="{{ user_layer_rating }}"></div>
+                        {% endif %}        
+                      </article>
+                      
                       <!--
                       Rate:
                       <i class="fa fa-star-o"></i>
