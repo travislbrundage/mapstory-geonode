@@ -72,7 +72,14 @@ INSTALLED_APPS += (
     'haystack',
     'mailer',
     'django_slack',
+    # Adding Threaded Comments app
+    'threadedcomments',
+    'django_comments',
+    'django.contrib.sites',
 )
+
+# Adding Threaded Comments app
+COMMENTS_APP = 'threadedcomments'
 
 TEMPLATE_CONTEXT_PROCESSORS += (
     'mapstory.context_processors.context',
