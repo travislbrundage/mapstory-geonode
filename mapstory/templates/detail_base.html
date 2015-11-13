@@ -57,7 +57,40 @@
           </div>
           <div class="col-sm-10">
             <article id="comments" class="tab-pane">
-              {% render_comment_list for resource %}
+              {% get_comment_list for resource as comment_list %}
+              {% for comment in comment_list %}
+              <div class="avatar pull-left"><a href="{{ comment.author.get_absolute_url }}">{% avatar comment.user 40 %}</a></div>
+              {{ comment.comment }}
+              <div class="comment-author">
+                <p>{% trans 'By' %} <a href="{% url "profile_detail" slug=comment.user.username %}">{{ comment.user }}</a> on <time>{{ comment.submit_date|date:"M j, Y" }}</time></p>
+              </div>
+              {% endfor %}
+              <br></br>
+              <br></br>
+
+              Comment form:
+              {% render_comment_form for resource %}
+
+              {% comment %}
+              This is a mess in progress. This all should be abstracted out into its own .html template file.
+              Where to put it though? Prob just making a folder called "comments" and .html file called comments.
+
+
+              This was supposed to render the threaded comments, doesn't seem to work though...? Might need to be edited.
+              {% for comment in comment_list|fill_tree|annotate_tree %}
+                  {% ifchanged comment.parent_id %}{% else %}</li>{% endifchanged %}
+                  {% if not comment.open and not comment.close %}</li>{% endif %}
+                  {% if comment.open %}<ul>{% endif %}
+
+                  <li id="c{{ comment.id }}">
+                      ...
+                  {% for close in comment.close %}</li></ul>{% endfor %}
+              {% endfor %}
+
+              Normal render without threaded: {% render_comment_list for resource %}
+              
+
+              Comment form:
               {% get_comment_form for resource as form %}
               <table>
                 <form action="{% comment_form_target %}" method="post">
@@ -72,7 +105,7 @@
                 </form>
               </table>
 
-              {% comment %}
+              Old comments:              
               {% with resource as obj %}
                 {% include "_comments.html" %}
               {% endwith %}
