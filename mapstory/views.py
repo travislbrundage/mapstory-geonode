@@ -68,7 +68,7 @@ from geonode.layers.views import _resolve_layer
 from geonode.tasks.deletion import delete_map, delete_layer
 from provider.oauth2.models import AccessToken
 from django.utils.timezone import now as provider_now
-
+import pdb
 import json
 import requests
 
@@ -623,6 +623,8 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
         "published_form": published_form,
         "content_moderators": content_moderators,
     }
+
+    #pdb.set_trace()
 
     context_dict["viewer"] = json.dumps(
         map_obj.viewer_json(request.user, * (NON_WMS_BASE_LAYERS + [maplayer])))
