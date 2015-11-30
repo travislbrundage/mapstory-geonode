@@ -78,6 +78,7 @@ INSTALLED_APPS += (
     'threadedcomments',
     'django_comments',
     'django.contrib.sites',
+    'endless_pagination',
 )
 
 # Adding Threaded Comments app
@@ -86,7 +87,8 @@ COMMENTS_APP = 'fluent_comments'
 
 TEMPLATE_CONTEXT_PROCESSORS += (
     'mapstory.context_processors.context',
-    'user_messages.context_processors.user_messages'
+    'user_messages.context_processors.user_messages',
+    'django.core.context_processors.request',
 )
 
 OGC_SERVER = {
