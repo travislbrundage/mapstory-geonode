@@ -76,7 +76,8 @@ INSTALLED_APPS += (
 
 TEMPLATE_CONTEXT_PROCESSORS += (
     'mapstory.context_processors.context',
-    'user_messages.context_processors.user_messages'
+    'user_messages.context_processors.user_messages',
+    'django.core.context_processors.request'
 )
 
 OGC_SERVER = {
@@ -359,3 +360,7 @@ if USE_AWS_S3:
     STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 
 REMOTE_CONTENT_URL = STATIC_URL + 'assets'
+
+# the layer_create view allows users to create layer by providing a workspace and a featureType
+# this settings whitelists the datastores in which layers creation are allowed
+ALLOWED_DATASTORE_LAYER_CREATE = ('datastore',)
