@@ -49,7 +49,7 @@ layer_detail_patterns = patterns('',
 urlpatterns = patterns('',
     # Adding Threaded Comments app
     url(r'^articles/comments/', include('django_comments.urls')),
-    url(r'^blog/comments/', include('fluent_comments.urls')),
+    url(r'^blog/comments/', include('fluent_comments.urls'), name='fluent_comments'),
 
     url(r'^$', IndexView.as_view(), name="index_view"),
     url(r'^accounts/profile/$', RedirectView.as_view(url=reverse_lazy('index_view'))), #temp fix for social auth redirect

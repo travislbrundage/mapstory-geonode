@@ -15,8 +15,9 @@ from geonode.layers.populate_layers_data import create_layer_data
 from mapstory.models import Community, DiaryEntry
 from geonode.people.models import Profile
 import json
-
+import pdb
 from mapstory.export import export_via_model
+from django.contrib.comments import Comment
 
 User = get_user_model()
 
@@ -391,29 +392,74 @@ class Oauth2ProviderTest(TestCase):
         account = json.loads(resp.content)
         self.assertEqual(int(account['id']), self.bobby.id)
 
-#
-# class MapStoryTestsWorkFlowTests(MapStoryTestMixin):
-#
-#     def setUp(self):
-#         # these are needed for the geonode fixtures
-#         TopicCategory.objects.create(identifier='biota')
-#         TopicCategory.objects.create(identifier='location')
-#         TopicCategory.objects.create(identifier='elevation')
-#
-#         create_models(type='layer')
-#         create_layer_data()
-#
-#     def test_layer(self):
-#         layer = Layer.objects.first()
-#         c = Client()
-#         response = c.get(reverse('layer_detail', args=[layer.typename]))
-#         self.assertEqual(response.status_code, 200)
-#
-#         response = c.get(reverse('layer_metadata', args=[layer.typename]))
-#         self.assertLoginRequired(response)
-#
-#         response = c.get(reverse('layer_edit', args=[layer.typename]))
-#         self.assertLoginRequired(response)
 
-
-
+#class MapStoryTestsWorkFlowTests(MapStoryTestMixin):
+#
+#    def setUp(self):
+#        # these are needed for the geonode fixtures
+#        TopicCategory.objects.create(identifier='biota')
+#        TopicCategory.objects.create(identifier='location')
+#        TopicCategory.objects.create(identifier='elevation')
+#
+#        create_models(type='layer')
+#        create_layer_data()
+#
+#    def test_layer(self):
+#        layer = Layer.objects.first()
+#        c = Client()
+#        response = c.get(reverse('layer_detail', args=[layer.typename]))
+#        self.assertEqual(response.status_code, 200)
+#
+#        response = c.get(reverse('layer_metadata', args=[layer.typename]))
+#        self.assertLoginRequired(response)
+#
+#        response = c.get(reverse('layer_edit', args=[layer.typename]))
+#        self.assertLoginRequired(response)
+#
+#    # Testing threaded comments work as expected
+#    def test_comments(self):
+#        # grab a layer to view
+#        layer = Layer.objects.first()
+#        c = Client()
+#
+#        # Make sure we can view the page
+#        response = c.get(reverse('layer_detail', args=[layer.typename]))
+#        self.assertEqual(response.status_code, 200)
+#
+#        # Post a comment
+#        comment = Comment()
+#        comment.content_type = layer
+#        comment.comment = "This is a comment."
+#        # does it already have the timestamp when created? I assume so.
+#        # csrfmiddlewaretoken = ?
+#        # security_hash = ?
+#        data = {'content_type': comment.content_type, 'object_pk': comment.object_pk,
+#        'timestamp': comment.timestamp, 'comment': comment.comment, 'honeypot': None, 'parent': None}
+#        # Figure out what data needs to be POST'd for a comment
+#        response = c.post(reverse('fluent_comments'), data=data)
+#
+#        # Reload the page and ensure that a comment is there
+#        response = c.get(reverse('layer_detail', args=[layer.typename]))
+#        self.assertEqual(len(response.context['comment_list']), 1)
+#
+#        # Post a comment on the comment
+#        comment2 = Comment()
+#        comment2.content_type = comment.content_type
+#        comment2.comment = "This is a threaded comment."
+#        comment2.parent = comment
+#        data['object_pk'] = comment2.object_pk
+#        data['timestamp'] = comment2.timestamp
+#        data['comment'] = comment2.comment
+#        data['parent'] = comment2.parent
+#        response = c.post(reverse('fluent_comments'), data=data)
+#
+#        # Reload the page and ensure that two comments are now there
+#        response = c.get(reverse('layer_detail', args=[layer.typename]))
+#        self.assertEqual(len(response.context['comment_list']), 2)
+#
+#        print response.context['comment_list'][0]
+#        print response.context['comment_list'][1]
+#        print response.context['comment_list'][1].parent
+#        # Make sure the first comment is a parent to the second comment
+#        # comment2.parent = comment1?
+#        # self.assertEqual(response.context['comment_list'][0], response.context['comment_list'][1].parent)
