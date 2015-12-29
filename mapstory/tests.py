@@ -18,6 +18,7 @@ import json
 from geonode.geoserver.helpers import gs_catalog
 from mapstory.export import export_via_model
 from socket import error as socket_error
+import pdb
 
 User = get_user_model()
 
@@ -424,4 +425,119 @@ class MapStoryTestsWorkFlowTests(MapStoryTestMixin):
         self.assertEqual(response.status_code, 200)
 
 
-
+    def test_detail_page_forms(self):
+        c = Client()
+        layer = Layer.objects.first()
+        # Render detail page and grab its context data
+        response = c.get(reverse('layer_detail', args=[layer.typename]))
+        self.assertEqual(response.status_code, 200)
+        # Fill in the keywords form
+        # response.context should have some of the context data, not sure what it lists though
+        # probably access with [], and it's probably a dict for the form
+        # Test what keywords are before
+        # Might need to be .objects.all() or smth
+        old_keywords = layer.keywords.all()
+        old_keywords_names = []
+        for okeyword in old_keywords:
+            old_keywords_names.append(okeyword.name)
+        form_data = {'keywords': 'test, test2'}
+        # Submit POST with the form data
+        response = c.post(reverse('layer_detail', args=[layer.typename]), data=form_data)
+        self.assertEqual(response.status_code, 200)
+        # Make sure the layer's keywords are updated
+        new_keywords = layer.keywords.all()
+        # Get the keywords_form from the request.context and make sure it has the new_keywords
+        # Assert they are equal
+        # Need to get just the names from the new_keywords
+        new_keywords_names = []
+        for nkeyword in new_keywords:
+            new_keywords_names.append(nkeyword.name)
+        # Do an assert that old and new are not the same
+        self.assertFalse(old_keywords_names == new_keywords_names)
+        response = c.get(reverse('layer_detail', args=[layer.typename]))
+        self.assertEqual(response.status_code, 200)
+        pdb.set_trace()
+        #self.assertEqual(request.context['keywords_form'].cleaned_data['keywords'], new_keywords_names)
+        # Now the published form
+        old_published_status = layer.is_published
+        form_data = {'is_published': 'on'}
+        # Submit POST with the form data
+        response = c.post(reverse('layer_detail', args=[layer.typename]), data=form_data)
+        self.assertEqual(response.status_code, 200)
+        # Make sure publishing status was updated
+        new_published_status = layer.is_published
+        # Do an assert that old and new are not the same
+        #self.assertFalse(old_published_status == new_published_status)
+        # We turned it on, so make sure the new status is True
+        #self.assertTrue(new_published_status)
+        # Make sure the keywords have been retained
+        # Do an assert that layer.keywords and new_keywords are the same
+        layer_keywords_names = []
+        for lkeyword in layer.keywords.all():
+            layer_keywords_names.append(lkeyword.name)
+        self.assertEqual(layer_keywords_names, new_keywords_names)
+        # Make sure the keywords_form from the request.context has new_keywords, and the published form has new_published_status
+        #self.assertEqual(request.context['keywords_form'].cleaned_data['keywords'], new_keywords_names)
+        #self.assertEqual(request.context['published_form'].cleaned_data['is_published'], new_published_status)
+        # Finally, the metadata form
+        old_metadata = {'category': layer.category, 'language': layer.language, 'distribution_url': layer.distribution_url,
+        'data_quality_statement': layer.data_quality_statement, 'purpose': layer.purpose, 'is_published': layer.is_published}
+        form_data = {'category': '1', 'language': 'fra', 'distribution_url': 'http://www.google.com',
+        'data_quality_statement': 'This is quality', 'purpose': 'To educate', 'is_published': 'on'}
+        # Submit POST with form data
+        response = c.post(reverse('layer_detail', args=[layer.typename]), data=form_data)
+        self.assertEqual(response.status_code, 200)
+        layer = Layer.objects.first()
+        new_metadata = {'category': layer.category, 'language': layer.language, 'distribution_url': layer.distribution_url,
+        'data_quality_statement': layer.data_quality_statement, 'purpose': layer.purpose, 'is_published': layer.is_published}
+        # Make sure the new_metadata is not identical to the old_metadata
+        self.assertFalse(new_metadata == old_metadata)
+        # Make sure the new_metadata is identical to the form_data that we posted
+        self.assertEqual(form_data, new_metadata)
+        # Make sure the keywords have been retained
+        layer_keywords_names = []
+        for lkeyword in layer.keywords.all():
+            layer_keywords_names.append(lkeyword.name)
+        self.assertEqual(layer_keywords_names, new_keywords_names)
+        # Make sure the keywords_form, published_form, and metadata_form all contain the appropriate values
+        #self.assertEqual(request.context['keywords_form'].cleaned_data['keywords'], new_keywords_names)
+        #self.assertEqual(request.context['published_form'].cleaned_data['is_published'], new_published_status)
+        #for metadata in new_metadata:
+        #    self.assertEqual(request.context['metadata_form'].cleaned_data[metadata], new_metadata[metadata])
+        # Render detail page and grab its context data
+        # Test map detail page
+        mapstory = Map.objects.first()
+        response = c.get(reverse('map_detail', args=[mapstory.id]))
+        self.assertEqual(response.status_code, 200)
+        # Fill in the keywords form
+        old_keywords = mapstory.keywords.all()
+        old_keywords_names = []
+        for okeyword in old_keywords:
+            old_keywords_names.append(okeyword.name)
+        form_data = {'keywords': 'test, test2'}
+        # Submit POST with form data
+        response = c.post(reverse('map_detail', args=[mapstory.id]), data=form_data)
+        new_keywords = mapstory.keywords.all()
+        self.assertFalse(old_keywords_names == new_keywords_names)
+        new_keywords_names = []
+        for nkeyword in new_keywords:
+            new_keywords_names.append(nkeyword.name)
+        #self.assertEqual(request.context['keywords_form'].cleaned_data['keywords'], new_keywords_names)
+        old_published_status = mapstory.is_published
+        form_data = {'is_published': 'on'}
+        response = c.post(reverse('map_detail', args=[mapstory.id]), data=form_data)
+        # Make sure publishing status was updated
+        new_published_status = mapstory.is_published
+        # Do an assert that old and new are not the same
+        #self.assertFalse(old_published_status == new_published_status)
+        # We turned it on, so make sure the new status is True
+        #self.assertTrue(new_published_status)
+        # Make sure the keywords have been retained
+        # Do an assert that layer.keywords and new_keywords are the same
+        map_keywords_names = []
+        for mkeyword in mapstory.keywords.all():
+            map_keywords_names.append(mkeyword.name)
+        self.assertEqual(map_keywords_names, new_keywords_names)
+        # Make sure the keywords_form from the request.context has new_keywords, and the published form has new_published_status
+        #self.assertEqual(request.context['keywords_form'].cleaned_data['keywords'], new_keywords_names)
+        #self.assertEqual(request.context['published_form'].cleaned_data['is_published'], new_published_status)
