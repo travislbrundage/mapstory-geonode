@@ -13,7 +13,8 @@
         'ui.bootstrap'
     ]);
 
-    module.constant('iconCommonsHost', 'http://mapstory.dev.boundlessgeo.com');
+    //module.constant('iconCommonsHost', 'http://192.168.56.151/');
+    module.constant('iconCommonsHost', 'https://www.mapbox.com/maki/');
 
     module.run(function() {
         // install a watchers debug loop
