@@ -7,7 +7,7 @@
 <div class="container">
     <div class="row">
         {{ form.non_field_errors }}
-        <form id="entry-form" method="POST">
+        <form id="entry-form" method="POST" action="#">
             {% csrf_token %}
             <div class="form-group full">
                 {{ form.title.errors }}
@@ -26,7 +26,7 @@
                 <label class="label-font" for="id_publish">Publish</label>
                 {{ form.publish }}
             </div>
-            <button type="submit" class="btn ">Save</button>
+            <button type="submit" class="btn">Save</button>
         </form>
     </div>
 </div>
