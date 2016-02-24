@@ -66,6 +66,12 @@
             }
             this.currentMapOptions = options;
         };
+        this.toggleFullScreen = function() {
+            var elem = document.getElementById('embedded_map');
+            console.log(elem);
+            var embedded_map = $('#embedded_map');
+            console.log(embedded_map);
+        };
         $rootScope.$on('$locationChangeSuccess', function() {
             var config = {% autoescape off %}{{ config }};{% endautoescape%}
             self.loadMap(config);

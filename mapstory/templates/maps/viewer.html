@@ -36,7 +36,13 @@
                     {%endverbatim%}
                 </div>
                 <div class="stLegend"></div>
-                <div id="map"></div>
+                <div id="map">
+                    <div id="toggle-fullscreen-border" class="map-btn-border" tooltip-append-to-body="true" tooltip-placement="left" tooltip="Toggle Fullscreen">
+                        <div id="toggle-fullscreen" ng-click="mapManager.toggleFullScreen()">
+                            <i class="glyphicon glyphicon-fullscreen"></i>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -78,3 +84,4 @@
         </div>
     </div>
 </div>
+

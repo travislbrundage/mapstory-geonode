@@ -21,10 +21,33 @@ Ext.onReady(function() {
    src: '/maps/{{ resource.id }}/viewer',
    id:  'myFrame',
    frameborder: 0,
-   style:'width: 650px; height: 450px;',
+   style: 'width: 100%; height: 100%;',
    scrolling: 'no'
    }).appendTo('#embedded_map');
 
+var elem = document.getElementById('embedded_map');
+
+function toggleFullScreen() {
+    if (!document.mozFullScreen && !document.webkitFullScreen) {
+        if (elem.mozRequestFullScreen) {
+            elem.mozRequestFullScreen();
+        } else {
+            elem.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+        }
+    } else {
+        if (document.mozCancelFullScreen) {
+            document.mozCancelFullScreen();
+        } else {
+            document.webkitCancelFullScreen();
+        }
+    }
+}
+
+document.addEventListener("keydown", function(e) {
+  if (e.keyCode == 13) {
+    toggleFullScreen();
+  }
+}, false);
 {% endautoescape %}
 });
 </script>
