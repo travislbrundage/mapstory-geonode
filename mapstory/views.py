@@ -280,6 +280,102 @@ class GroupDetail(DetailView):
         
         return ctx
 
+'''
+# Update these for organization/initiatives
+@login_required
+def organization_create(request):
+    if request.method == "POST":
+        form = GroupForm(request.POST, request.FILES)
+        if form.is_valid():
+            group = form.save(commit=False)
+            group.save()
+            form.save_m2m()
+            group.join(request.user, role="manager")
+            return HttpResponseRedirect(
+                reverse(
+                    "group_detail",
+                    args=[
+                        group.slug]))
+    else:
+        form = GroupForm()
+
+    return render_to_response("groups/group_create.html", {
+        "form": form,
+    }, context_instance=RequestContext(request))
+
+
+@login_required
+def organization_edit(request, slug):
+    group = GroupProfile.objects.get(slug=slug)
+    if not group.user_is_role(request.user, role="manager"):
+        return HttpResponseForbidden()
+
+    if request.method == "POST":
+        form = GroupUpdateForm(request.POST, request.FILES, instance=group)
+        if form.is_valid():
+            group = form.save(commit=False)
+            group.save()
+            form.save_m2m()
+            return HttpResponseRedirect(
+                reverse(
+                    "group_detail",
+                    args=[
+                        group.slug]))
+    else:
+        form = GroupForm(instance=group)
+
+    return render_to_response("groups/group_update.html", {
+        "form": form,
+        "group": group,
+    }, context_instance=RequestContext(request))
+
+@login_required
+def initiative_create(request):
+    if request.method == "POST":
+        form = GroupForm(request.POST, request.FILES)
+        if form.is_valid():
+            group = form.save(commit=False)
+            group.save()
+            form.save_m2m()
+            group.join(request.user, role="manager")
+            return HttpResponseRedirect(
+                reverse(
+                    "group_detail",
+                    args=[
+                        group.slug]))
+    else:
+        form = GroupForm()
+
+    return render_to_response("groups/group_create.html", {
+        "form": form,
+    }, context_instance=RequestContext(request))
+
+
+@login_required
+def initiative_edit(request, slug):
+    group = GroupProfile.objects.get(slug=slug)
+    if not group.user_is_role(request.user, role="manager"):
+        return HttpResponseForbidden()
+
+    if request.method == "POST":
+        form = GroupUpdateForm(request.POST, request.FILES, instance=group)
+        if form.is_valid():
+            group = form.save(commit=False)
+            group.save()
+            form.save_m2m()
+            return HttpResponseRedirect(
+                reverse(
+                    "group_detail",
+                    args=[
+                        group.slug]))
+    else:
+        form = GroupForm(instance=group)
+
+    return render_to_response("groups/group_update.html", {
+        "form": form,
+        "group": group,
+    }, context_instance=RequestContext(request))
+'''
 
 class LeaderListView(ListView):
     context_object_name = 'leaders'

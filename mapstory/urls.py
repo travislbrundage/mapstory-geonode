@@ -32,6 +32,8 @@ from geonode.geoserver.views import layer_acls, resolve_user, layer_batch_downlo
 from django.core.urlresolvers import reverse_lazy
 from django.views.generic import RedirectView
 from osgeo_importer.urls import urlpatterns as importer_urlpatterns
+#from mapstory.views import OrganizationDetail
+#from mapstory.views import InitiativeDetail
 
 
 # -- Deprecated url routes for Geoserver authentication -- remove after GeoNode 2.1
@@ -110,6 +112,13 @@ urlpatterns = patterns('',
     url(r'^initiative/(?P<slug>[^/]*)$', CommunityDetail.as_view(), name='community-detail'),
 
     url(r'^channels/(?P<slug>[^/]*)$', GroupDetail.as_view(), name='group_detail'),
+
+    #url(r'^organizations/create$', 'organization_create', name='organization_create'),
+    #url(r'^organizations/(?P<slug>[^/]*)$', OrganizationDetail.as_view(), name='organization_detail'),
+    #url(r'^organizations/edit/(?P<slug>[^/]*)$', 'organization_edit', name='organization_edit'),
+    #url(r'^initiatives/create$', 'initiative_create', name='initiative_create'),
+    #url(r'^initiatives/(?P<slug>[^/]*)$', InitiativeDetail.as_view(), name='initiative_detail'),
+    #url(r'^initiatives/edit/(?P<slug>[^/]*)$', 'initiative_edit', name='initiative_edit'),
 
     url(r'^get(?P<slug>\w+)$', GetPageView.as_view(), name='getpage'),
     url(r'^search/$', SearchView.as_view(), name='search'),
