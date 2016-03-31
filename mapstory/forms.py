@@ -7,6 +7,9 @@ from geonode.layers.models import Layer
 from geonode.base.forms import Profile
 from geonode.base.models import ResourceBase
 import taggit
+from geonode.groups.models import GroupProfile
+from geonode.groups.forms import GroupForm
+from geonode.groups.forms import GroupUpdateForm
 
 class MapStorySignupForm(SignupForm):
     """
@@ -145,3 +148,33 @@ class EditProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ['first_name', 'last_name', 'keywords', 'city', 'country', 'profile', 'education', 'expertise', 'social_twitter', 'social_facebook', 'social_linkedin', 'social_github', 'Volunteer_Technical_Community']
+
+
+# Do we need these, or can we just use GroupForm/GroupUpdateForm?
+# A form for creating Organizations
+class OrganizationForm(GroupForm):
+
+    class Meta:
+        model = GroupProfile
+        exclude = ['group', 'profile_type']
+
+# A form for editing Organizations
+class OrganizationEditForm(GroupUpdateForm):
+
+    class Meta:
+        model = GroupProfile
+        exclude = ['group', 'profile_type']
+
+# A form for creating Initiatives
+class InitiativeForm(GroupForm):
+
+    class Meta:
+        model = GroupProfile
+        exclude = ['group', 'profile_type']
+
+# A form for editing Initiatives
+class InitiativeEditForm(GroupUpdateForm):
+
+    class Meta:
+        model = GroupProfile
+        exclude = ['group', 'profile_type']

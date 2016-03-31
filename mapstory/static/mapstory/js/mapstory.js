@@ -392,6 +392,26 @@
     };
   })
 
+.controller('collection_controller', function($http, $scope) {
+  // TODO: Need to change this GET to query the correct API endpoint for the organization
+  // The group id in the scope should correspond to the collection #
+  $http.get('/api/collections/2/').then(function(response) {
+    console.log(response.data.group.diaryentry);
+    var data = response.data;
+    // Define objects for the scope
+    $scope.avatar = data.group.logo;
+    $scope.title = data.group.title; // or is it .name?
+    $scope.facebook = data.group.social_facebook;
+    $scope.facebook = data.group.social_twitter;
+    $scope.interests = data.group.keywords;
+    $scope.summary = data.group.description;
+    $scope.city = data.group.city;
+    $scope.country = data.group.country;
+    // MapStories and StoryLayers need to be grabbed from resources
+    $scope.storytellers = data.group.users; // might just be users
+  });  
+})
+
 .controller('detail_page_controller', function($compile, $scope, $http){
   function toggle_visibility(id) {
      var e = document.getElementById(id);
@@ -409,7 +429,6 @@
     $scope.tags.push(keyword_list[i]);
   }
 
-  // Change to 10
   var MAX_TOKENS = 10;
 
   // Manually set the value field

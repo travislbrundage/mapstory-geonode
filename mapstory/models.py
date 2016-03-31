@@ -67,6 +67,9 @@ class DiaryEntry(ContentMixin):
     title = models.CharField(max_length=255)
     author = models.ForeignKey(settings.AUTH_USER_MODEL)
     show_on_main = models.BooleanField(default=False)
+    # Fix this to have the correct m2m relationship
+    # Also will need to update with a DiaryEntryResource for the API
+    groups = models.ManyToManyField(GroupProfile)
 
     def __unicode__(self):
         return u'%s' % (self.title)
