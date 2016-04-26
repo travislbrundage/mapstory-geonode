@@ -467,13 +467,19 @@
 })
 
 .controller('detail_page_controller', function($compile, $scope, $http){
+  $scope.query_category = function(category) {
+    return $http.get('/api/base/?type__in=mapstory&category__identifier__in=' + category.toLowerCase()).success(function(data){
+      $scope.results = data.objects;
+    });
+  };
+
   $scope.toggle_visibility = function(id) {
      var e = document.getElementById(id);
      if(e.style.display == 'block')
         e.style.display = 'none';
      else
         e.style.display = 'block';
-  }
+  };
 
   // For some reason it gets it all as a string, so parse for the ' and grab the content in between them
   keyword_list = keyword_list.split('\'');

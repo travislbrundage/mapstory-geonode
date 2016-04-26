@@ -4,7 +4,7 @@
   <div class="col-sm-12">
     <ul class="nav nav-tabs">
         <li class="active"><a href="#Summary" data-toggle="tab" style="font-size:0.8em;">Summary</a></li>
-        <li><a href="#Related" data-toggle="tab" style="font-size:0.8em;" ng-click="query_category('{{ resource.category }}', 'map');">Related</a></li>
+        <li><a href="#Related" data-toggle="tab" style="font-size:0.8em;" ng-click="query_category('{{ resource.category }}');">Related</a></li>
         <li><a href="#Chapters" data-toggle="tab" style="font-size:0.8em;">Chapters</a></li>
         <li><a href="#StoryLayers" data-toggle="tab" style="font-size:0.8em;">StoryLayers Used</a></li>
     </ul>
@@ -52,7 +52,6 @@
       <div class="tab-pane" id="Related">
         <div style="max-height:500px; overflow-y:scroll; overflow-x:hidden">
           {% if resource.category %}
-          <!-- TODO: Did this ever work? Not sure where the results came from... query_category? Check ng-apps -->
             {% verbatim %}
             <div ng-hide="results.length">
               No related mapstories found...
