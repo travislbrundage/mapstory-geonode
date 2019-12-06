@@ -42,3 +42,7 @@ django-model-utils==3.0.0
 elasticsearch==1.6.0
 lxml==3.6.2
 Pillow==5.1.0
+
+# PKI dependencies
+# django-ordered-model==1.4.3
+django-ssl-pki==1.0.0

@@ -87,3 +87,7 @@ if settings.LOCAL_CONTENT:
 urlpatterns += patterns('',
                         url(r'^accounts/', include('allauth.urls')),
                         )
+
+if 'ssl_pki' in settings.INSTALLED_APPS:
+    from ssl_pki.urls import urlpatterns as ssl_pki_urls
+    urlpatterns += ssl_pki_urls
