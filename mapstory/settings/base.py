@@ -130,20 +130,19 @@ INSTALLED_APPS += (
 )
 
 # ssl_pki
-SSL_PKI_ENABLED = strtobool(os.getenv('SSL_PKI_ENABLED', 'False'))
+SSL_PKI_ENABLED = 'False'  # strtobool(os.getenv('SSL_PKI_ENABLED', 'False'))
 if SSL_PKI_ENABLED:
     INSTALLED_APPS = INSTALLED_APPS + (
-        'ordered_model',
+        # 'ordered_model',
         'ssl_pki',
-        # 'exchange.sslpki',  # for connecting ssl_pki signals to geonode models
-        # 'exchange.sslpki.pki',  # mock old exchange.pki app, for data migration
+        'mapstory.sslpki',  # for connecting ssl_pki signals to geonode models
     )
 
     # Force max length validation on encrypted password fields
     ENFORCE_MAX_LENGTH = 1
 
     # IMPORTANT: this directory should not be within application or www roots
-    PKI_DIRECTORY = os.getenv('PKI_DIRECTORY', '/usr/local/exchange-pki')
+    PKI_DIRECTORY = os.getenv('PKI_DIRECTORY', '/usr/local/mapstory-pki')
 
     # ssl_pki app expects a generic setting for EXCHANGE_LOCAL_URL
     try:

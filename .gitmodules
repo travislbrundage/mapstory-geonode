@@ -30,3 +30,6 @@
 	path = deps/story-tools-composer
 	url = https://github.com/MapStory/story-tools-composer.git
 	branch = master
+[submodule "deps/django-ssl-pki"]
+	path = deps/django-ssl-pki
+	url = git@github.com:planetfederal/django-ssl-pki.git
