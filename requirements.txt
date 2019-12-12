@@ -44,8 +44,4 @@ lxml==3.6.2
 Pillow==5.1.0
 
 # PKI dependencies
-# -e ./deps/django-ssl-pki
-# Is this truly needed?
-# django-ordered-model==1.4.3
-# This does not work b/c it was never published to pypi
-# django-ssl-pki==1.0.0
+git+https://github.com/planetfederal/django-ssl-pki
