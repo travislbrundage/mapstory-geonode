@@ -45,3 +45,5 @@ Pillow==5.1.0
 
 # PKI dependencies
 git+https://github.com/planetfederal/django-ssl-pki
+# Is this going to override it?
+git+https://github.com/planetfederal/ArcREST.git@4945fd1b3325a5f1b3e7215833fd8fb1cebeb0b2

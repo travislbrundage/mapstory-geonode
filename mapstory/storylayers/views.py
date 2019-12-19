@@ -56,6 +56,13 @@ from mapstory.utils import has_exception, parse_wfst_response, print_exception
 from osgeo_importer.utils import UploadError, launder
 from owslib.feature.schema import get_schema
 
+try:
+    if 'ssl_pki' not in settings.INSTALLED_APPS:
+        raise ImportError
+    from ssl_pki.models import uses_proxy_route
+except ImportError:
+    uses_proxy_route = None
+
 logger = logging.getLogger("geonode.layers.views")
 
 
@@ -330,6 +337,7 @@ def download_append_shp(request):
 
 
 def layer_detail(request, layername, template='layers/layer_detail.html'):
+    # TODO: add use_proxy stuff
     layer = _resolve_layer(
         request,
         layername,
@@ -499,6 +507,9 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
                 "url": service.service_url,
                 "name": service.name,
                 "title": "[R] %s" % service.title}
+        use_proxy = (callable(uses_proxy_route) and
+                     uses_proxy_route(service.base_url))
+        source_params["use_proxy"] = use_proxy
         maplayer = GXPLayer(
             name=layer.alternate,
             ows_url=layer.ows_url,
@@ -933,5 +944,7 @@ def get_remote_url(request, layername):
     if layer.remote_service is not None:
         service = layer.remote_service
         url = service.online_resource
-
+        if callable(uses_proxy_route) and uses_proxy_route(url) and \
+                settings.PROXY_URL:
+            url = settings.PROXY_URL + url
     return HttpResponse(url)
