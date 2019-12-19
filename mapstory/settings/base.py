@@ -127,13 +127,13 @@ INSTALLED_APPS += (
     'mapstory.mapstory_profile',
     'mapstory.mapstories',
     'mapstory.storylayers',
+    'mapstory.remoteservices',
 )
 
 # ssl_pki
-SSL_PKI_ENABLED = 'False'  # strtobool(os.getenv('SSL_PKI_ENABLED', 'False'))
+SSL_PKI_ENABLED = True  # strtobool(os.getenv('SSL_PKI_ENABLED', 'False'))
 if SSL_PKI_ENABLED:
-    INSTALLED_APPS = INSTALLED_APPS + (
-        # 'ordered_model',
+    INSTALLED_APPS += (
         'ssl_pki',
         'mapstory.sslpki',  # for connecting ssl_pki signals to geonode models
     )
@@ -726,7 +726,7 @@ if LOGIN_WARNING_ENABLED:
 FEATURE_MULTIPLE_STORY_CHAPTERS = str_to_bool(
     os.environ.get('FEATURE_MULTIPLE_STORY_CHAPTERS', 'False'))
 
-X_FRAME_OPTIONS = 'ALLOWALL'
+X_FRAME_OPTIONS = 'SAMEORIGIN'
 
 # audit settings
 AUDIT_ENABLED = str_to_bool(os.getenv('AUDIT_ENABLED', 'False'))
