@@ -46,9 +46,14 @@ Pillow==5.1.0
 # PKI dependencies
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 git+https://github.com/planetfederal/django-ssl-pki
 # Is this going to override it?
 git+https://github.com/planetfederal/ArcREST.git@4945fd1b3325a5f1b3e7215833fd8fb1cebeb0b2
+=======
+# -e ./deps/django-ssl-pki
+# django-ordered-model==1.4.3
+>>>>>>> Stashed changes
 =======
 # -e ./deps/django-ssl-pki
 # django-ordered-model==1.4.3

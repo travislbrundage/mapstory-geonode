@@ -134,12 +134,16 @@ INSTALLED_APPS += (
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 SSL_PKI_ENABLED = True  # strtobool(os.getenv('SSL_PKI_ENABLED', 'False'))
 =======
 SSL_PKI_ENABLED = False  # strtobool(os.getenv('SSL_PKI_ENABLED', 'False'))
 >>>>>>> Stashed changes
 =======
 SSL_PKI_ENABLED = False  # strtobool(os.getenv('SSL_PKI_ENABLED', 'False'))
+>>>>>>> Stashed changes
+=======
+SSL_PKI_ENABLED = 'False'  # strtobool(os.getenv('SSL_PKI_ENABLED', 'False'))
 >>>>>>> Stashed changes
 =======
 SSL_PKI_ENABLED = 'False'  # strtobool(os.getenv('SSL_PKI_ENABLED', 'False'))
