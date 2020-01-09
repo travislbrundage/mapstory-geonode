@@ -60,6 +60,9 @@ urlpatterns = patterns('',
                            template_name='robots.txt', content_type="text/plain"), name='robots'),
                        url(r'^baselayers$',
                            baselayer_view, name='baselayer_view'),
+                       # TODO: This correctly overrides the services but breaks everything for some reason
+                       # url(r'^services/',
+                       #    include('mapstory.remoteservices.urls')),
                        )
 
 urlpatterns += patterns("", url(r'', include(mapstory_api.urls)))

@@ -134,6 +134,7 @@ INSTALLED_APPS += (
 SSL_PKI_ENABLED = True  # strtobool(os.getenv('SSL_PKI_ENABLED', 'False'))
 if SSL_PKI_ENABLED:
     INSTALLED_APPS += (
+        'ordered_model',
         'ssl_pki',
         'mapstory.sslpki',  # for connecting ssl_pki signals to geonode models
     )
@@ -152,7 +153,7 @@ if SSL_PKI_ENABLED:
 
     PROXY_URL = os.getenv(
         'PROXY_URL',
-        ''
+        '/proxy/?url='
     )
 
 if is_valid(os.getenv("ALLAUTH_GEOAXIS_HOST")):
