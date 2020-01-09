@@ -30,9 +30,12 @@ import traceback
 from django.conf import settings
 from django.template.defaultfilters import slugify, safe
 
-from arcrest import MapService as ArcMapService
-from arcrest import ImageService as ArcImageService
+from arcrest.ags import MapService as ArcMapService
+from arcrest.ags import ImageService as ArcImageService
 
+# TODO: So we might need to just entirely rewrite this since it
+# doesn't use arcrest.ags. Just copy and paste / rewrite in this file
+# so we can remove this import
 from geonode.services.serviceprocessors.arcgis \
     import ArcMapServiceHandler, ArcImageServiceHandler
 from geonode.layers.utils import create_thumbnail
