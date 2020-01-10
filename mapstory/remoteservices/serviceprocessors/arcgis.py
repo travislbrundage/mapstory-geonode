@@ -27,20 +27,24 @@ import os
 import logging
 import traceback
 
+from uuid import uuid4
+
 from django.conf import settings
 from django.template.defaultfilters import slugify, safe
+from django.utils.translation import ugettext as _
 
 from arcrest.ags import MapService as ArcMapService
 from arcrest.ags import ImageService as ArcImageService
 
-# TODO: So we might need to just entirely rewrite this since it
-# doesn't use arcrest.ags. Just copy and paste / rewrite in this file
-# so we can remove this import
-from geonode.services.serviceprocessors.arcgis \
-    import ArcMapServiceHandler, ArcImageServiceHandler
+from geonode.base.models import Link
+from geonode.layers.models import Layer
 from geonode.layers.utils import create_thumbnail
 from geonode.services import utils
-from geonode.services.enumerations import INDEXED
+from geonode.services import enumerations
+from geonode.services import models
+from geonode.services.serviceprocessors import base
+
+from collections import namedtuple
 
 try:
     if 'ssl_pki' not in settings.INSTALLED_APPS:
@@ -59,9 +63,28 @@ except ImportError:
 
 logger = logging.getLogger(__name__)
 
+MapLayer = namedtuple("MapLayer",
+                      "id, \
+                      title, \
+                      abstract, \
+                      type, \
+                      geometryType, \
+                      copyrightText, \
+                      extent, \
+                      fields, \
+                      minScale, \
+                      maxScale")
 
-class MapstoryArcMapServiceHandler(ArcMapServiceHandler):
-    """Remote service handler for ESRI:ArcGIS:MapServer services"""
+
+class MapstoryArcMapServiceHandler(base.ServiceHandlerBase):
+    """Remote service handler for ESRI:ArcGIS:MapServer services
+
+    This function is mostly a copy and paste of GeoNode's ArcMapServiceHandler.
+    The reason for this is because PKI requires a different version of arcgis,
+    which restructures the import statements.
+    """
+
+    service_type = enumerations.REST_MAP
 
     def __init__(self, url, **kwargs):
         headers = kwargs.pop('headers', None)
@@ -93,9 +116,175 @@ class MapstoryArcMapServiceHandler(ArcMapServiceHandler):
             self.pki_url = self.url
             self.pki_proxy_url = pki_to_proxy_route(self.url)
             self.url = pki_route_reverse(self.url)
-        self.indexing_method = INDEXED
+        self.indexing_method = enumerations.INDEXED
         self.name = slugify(self.url)[:255]
         self.title = _title
+
+    def create_cascaded_store(self):
+        return None
+
+    def create_geonode_service(self, owner, parent=None):
+        """Create a new geonode.service.models.Service instance
+
+        :arg owner: The user who will own the service instance
+        :type owner: geonode.people.models.Profile
+
+        """
+
+        instance = models.Service(
+            uuid=str(uuid4()),
+            base_url=self.url,
+            proxy_base=self.proxy_base,
+            type=self.service_type,
+            method=self.indexing_method,
+            owner=owner,
+            parent=parent,
+            version=self.parsed_service._json_struct["currentVersion"],
+            name=self.name,
+            title=self.title,
+            abstract=self.parsed_service._json_struct["serviceDescription"]
+                     or _("Not provided"),
+            online_resource=self.parsed_service.url,
+        )
+        return instance
+
+    def get_keywords(self):
+        return self.parsed_service._json_struct["capabilities"].split(",")
+
+    def get_resource(self, resource_id):
+        ll = None
+        try:
+            ll = self.parsed_service.layers[int(resource_id)]
+        except BaseException:
+            traceback.print_exc()
+
+        return self._layer_meta(ll) if ll else None
+
+    def get_resources(self):
+        """Return an iterable with the service's resources.
+
+        For WMS we take into account that some layers are just logical groups
+        of metadata and do not return those.
+
+        """
+        try:
+            return self._parse_layers(self.parsed_service.layers)
+        except BaseException:
+            return None
+
+    def _parse_layers(self, layers):
+        map_layers = []
+        for l in layers:
+            map_layers.append(self._layer_meta(l))
+            map_layers.extend(self._parse_layers(l.subLayers))
+        return map_layers
+
+    def _layer_meta(self, layer):
+        _ll = {}
+        _ll['id'] = layer.id
+        _ll['title'] = layer.name
+        _ll['abstract'] = layer.name
+        _ll['type'] = layer.type
+        _ll['geometryType'] = layer.geometryType
+        _ll['copyrightText'] = layer.copyrightText
+        _ll['extent'] = layer.extent
+        _ll['fields'] = layer.fields
+        _ll['minScale'] = layer.minScale
+        _ll['maxScale'] = layer.maxScale
+        return MapLayer(**_ll)
+
+    def harvest_resource(self, resource_id, geonode_service):
+        """Harvest a single resource from the service
+
+        This method will try to create new ``geonode.layers.models.Layer``
+        instance (and its related objects too).
+
+        :arg resource_id: The resource's identifier
+        :type resource_id: str
+        :arg geonode_service: The already saved service instance
+        :type geonode_service: geonode.services.models.Service
+
+        """
+        layer_meta = self.get_resource(resource_id)
+        if layer_meta:
+            resource_fields = self._get_indexed_layer_fields(layer_meta)
+            keywords = resource_fields.pop("keywords")
+            existance_test_qs = Layer.objects.filter(
+                name=resource_fields["name"],
+                store=resource_fields["store"],
+                workspace=resource_fields["workspace"]
+            )
+            if existance_test_qs.exists():
+                raise RuntimeError(
+                    "Resource {!r} has already been harvested".format(
+                        resource_id))
+            resource_fields["keywords"] = keywords
+            resource_fields["is_approved"] = True
+            resource_fields["is_published"] = True
+            if settings.RESOURCE_PUBLISHING or settings.ADMIN_MODERATE_UPLOADS:
+                resource_fields["is_approved"] = False
+                resource_fields["is_published"] = False
+            geonode_layer = self._create_layer(
+                geonode_service, **resource_fields)
+            # self._enrich_layer_metadata(geonode_layer)
+            self._create_layer_service_link(geonode_layer)
+            # self._create_layer_legend_link(geonode_layer)
+        else:
+            raise RuntimeError(
+                "Resource {!r} cannot be harvested".format(resource_id))
+
+    def has_resources(self):
+        try:
+            return True if len(self.parsed_service.layers) > 0 else False
+        except BaseException:
+            traceback.print_exc()
+            return False
+
+    def _offers_geonode_projection(self, srs):
+        geonode_projection = getattr(settings, "DEFAULT_MAP_CRS", "EPSG:3857")
+        return geonode_projection in "EPSG:{}".format(srs)
+
+    def _get_indexed_layer_fields(self, layer_meta):
+        srs = "EPSG:%s" % layer_meta.extent.spatialReference.wkid
+        bbox = utils.decimal_encode([layer_meta.extent.xmin,
+                                     layer_meta.extent.ymin,
+                                     layer_meta.extent.xmax,
+                                     layer_meta.extent.ymax])
+        return {
+            "name": layer_meta.title,
+            "store": self.name,
+            "storeType": "remoteStore",
+            "workspace": "remoteWorkspace",
+            "typename": "{}-{}".format(layer_meta.id, layer_meta.title),
+            "alternate": "{}-{}".format(layer_meta.id, layer_meta.title),
+            "title": layer_meta.title,
+            "abstract": layer_meta.abstract,
+            "bbox_x0": bbox[0],
+            "bbox_x1": bbox[2],
+            "bbox_y0": bbox[1],
+            "bbox_y1": bbox[3],
+            "srid": srs,
+            "keywords": ['ESRI', 'ArcGIS REST MapServer', layer_meta.title],
+        }
+
+    def _create_layer(self, geonode_service, **resource_fields):
+        # bear in mind that in ``geonode.layers.models`` there is a
+        # ``pre_save_layer`` function handler that is connected to the
+        # ``pre_save`` signal for the Layer model. This handler does a check
+        # for common fields (such as abstract and title) and adds
+        # sensible default values
+        keywords = resource_fields.pop("keywords") or []
+        geonode_layer = Layer(
+            owner=geonode_service.owner,
+            remote_service=geonode_service,
+            uuid=str(uuid4()),
+            **resource_fields
+        )
+        geonode_layer.full_clean()
+        geonode_layer.save()
+        geonode_layer.keywords.add(*keywords)
+        geonode_layer.set_default_permissions()
+        return geonode_layer
 
     def _create_layer_thumbnail(self, geonode_layer):
         """Create a thumbnail with a WMS request."""
@@ -125,8 +314,29 @@ class MapstoryArcMapServiceHandler(ArcMapServiceHandler):
             overwrite=True
         )
 
+    def _create_layer_service_link(self, geonode_layer):
+        Link.objects.get_or_create(
+            resource=geonode_layer.resourcebase_ptr,
+            url=geonode_layer.ows_url,
+            name="ESRI {}: {} Service".format(
+                geonode_layer.remote_service.type,
+                geonode_layer.store
+            ),
+            defaults={
+                "extension": "html",
+                "name": "ESRI {}: {} Service".format(
+                    geonode_layer.remote_service.type,
+                    geonode_layer.store
+                ),
+                "url": geonode_layer.ows_url,
+                "mime": "text/html",
+                "link_type": "ESRI:{}".format(
+                    geonode_layer.remote_service.type),
+            }
+        )
 
-class MapstoryArcImageServiceHandler(ArcImageServiceHandler):
+
+class MapstoryArcImageServiceHandler(MapstoryArcMapServiceHandler):
     """Remote service handler for ESRI:ArcGIS:ImageService services"""
 
     def __init__(self, url, **kwargs):
@@ -159,6 +369,6 @@ class MapstoryArcImageServiceHandler(ArcImageServiceHandler):
             self.pki_url = self.url
             self.pki_proxy_url = pki_to_proxy_route(self.url)
             self.url = pki_route_reverse(self.url)
-        self.indexing_method = INDEXED
+        self.indexing_method = enumerations.INDEXED
         self.name = slugify(self.url)[:255]
         self.title = _title

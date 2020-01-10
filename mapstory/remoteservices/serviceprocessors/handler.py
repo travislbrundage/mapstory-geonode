@@ -26,9 +26,9 @@ from django.utils.datastructures import OrderedDict
 from django.conf import settings
 
 from geonode.services import enumerations
-from mapstory.services.serviceprocessors.arcgis import \
+from mapstory.remoteservices.serviceprocessors.arcgis import \
     MapstoryArcMapServiceHandler, MapstoryArcImageServiceHandler
-from mapstory.services.serviceprocessors.wms import \
+from mapstory.remoteservices.serviceprocessors.wms import \
     MapstoryWmsServiceHandler, MapstoryServiceHandler
 from mapstory.utils import get_bearer_token
 

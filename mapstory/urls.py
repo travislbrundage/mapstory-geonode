@@ -61,8 +61,8 @@ urlpatterns = patterns('',
                        url(r'^baselayers$',
                            baselayer_view, name='baselayer_view'),
                        # TODO: Uncomment when we've finished arcgis fixes
-                       # url(r'^services/',
-                       #    include('mapstory.remoteservices.urls')),
+                       url(r'^services/',
+                           include('mapstory.remoteservices.urls')),
                        )
 
 urlpatterns += patterns("", url(r'', include(mapstory_api.urls)))
