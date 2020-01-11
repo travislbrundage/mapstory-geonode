@@ -26,10 +26,13 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.template import loader
+from django.utils.translation import ugettext as _
 
 from geonode.services import enumerations
 from geonode.services.models import Service, HarvestJob
 from geonode.services.views import _gen_harvestable_ids
+from geonode.services import forms
 
 from mapstory.utils import get_bearer_token
 from mapstory.remoteservices import tasks
@@ -224,3 +227,33 @@ def rescan_service(request, service_id):
         request, messages.SUCCESS, _("Service rescanned successfully"))
     return redirect(
         reverse("harvest_resources", kwargs={"service_id": service_id}))
+
+
+@login_required
+def edit_service(request, service_id):
+    """
+    Edit an existing Service
+    """
+    service = get_object_or_404(Service, pk=service_id)
+    if request.user != service.owner and not request.user.has_perm('change_service', obj=service):
+        return HttpResponse(
+            loader.render_to_string(
+                '401.html', context={
+                        'error_message': _(
+                            "You are not permitted to change this service."
+                        )}, request=request), status=401)
+    if request.method == "POST":
+        service_form = forms.ServiceForm(
+            request.POST, instance=service, prefix="service")
+        if service_form.is_valid():
+            service = service_form.save(commit=False)
+            service.keywords.clear()
+            service.keywords.add(*service_form.cleaned_data['keywords'])
+            service.save()
+            return HttpResponseRedirect(service.get_absolute_url())
+    else:
+        service_form = forms.ServiceForm(
+            instance=service, prefix="service")
+    return render(request,
+                  "services/service_edit.html",
+                  context={"service": service, "service_form": service_form})

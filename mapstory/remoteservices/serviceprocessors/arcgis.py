@@ -33,6 +33,8 @@ from django.conf import settings
 from django.template.defaultfilters import slugify, safe
 from django.utils.translation import ugettext as _
 
+from osgeo import osr
+
 from arcrest.ags import MapService as ArcMapService
 from arcrest.ags import ImageService as ArcImageService
 
@@ -76,6 +78,33 @@ MapLayer = namedtuple("MapLayer",
                       maxScale")
 
 
+def epsg_string(bbox):
+    logging.debug('bbox: %s', bbox)
+    if 'spatialReference' in bbox:
+        sr = bbox['spatialReference']
+        if 'latestWkid' in sr:
+            return "EPSG:%s" % sr['latestWkid']
+        if 'wkt' in sr:
+            wkt = sr['wkt']
+            logging.debug('wkt: %s', wkt)
+            ref = osr.SpatialReference()
+            ref.ImportFromWkt(wkt)
+            ref.MorphFromESRI()
+            matches = ref.FindMatches()
+            if len(matches) > 0:
+                match = matches[0][0]
+                code = match.GetAuthorityCode('PROJCS')
+                if code:
+                    return "EPSG:%s" % code
+                code = match.GetAuthorityCode('GEOGCS')
+                if code:
+                    return "EPSG:%s" % code
+                code = match.GetAuthorityCode(None)
+                if code:
+                    return "EPSG:%s" % code
+
+    return None
+
 class MapstoryArcMapServiceHandler(base.ServiceHandlerBase):
     """Remote service handler for ESRI:ArcGIS:MapServer services
 
@@ -92,7 +121,8 @@ class MapstoryArcMapServiceHandler(base.ServiceHandlerBase):
 
         self.proxy_base = None
         self.url = url
-        self.parsed_service = ArcMapService(self.url, headers=headers)
+        # ONLY Authorization is messing it up due to the bearer token, why?
+        self.parsed_service = ArcMapService(self.url, add_headers=headers)
         extent, srs = utils.get_esri_extent(self.parsed_service)
         try:
             _sname = utils.get_esri_service_name(self.url)
@@ -139,17 +169,17 @@ class MapstoryArcMapServiceHandler(base.ServiceHandlerBase):
             method=self.indexing_method,
             owner=owner,
             parent=parent,
-            version=self.parsed_service._json_struct["currentVersion"],
+            version=self.parsed_service.currentVersion,
             name=self.name,
             title=self.title,
-            abstract=self.parsed_service._json_struct["serviceDescription"]
+            abstract=self.parsed_service.serviceDescription
                      or _("Not provided"),
             online_resource=self.parsed_service.url,
         )
         return instance
 
     def get_keywords(self):
-        return self.parsed_service._json_struct["capabilities"].split(",")
+        return self.parsed_service.documentInfo['Keywords'].split(',')
 
     def get_resource(self, resource_id):
         ll = None
@@ -205,7 +235,11 @@ class MapstoryArcMapServiceHandler(base.ServiceHandlerBase):
         :type geonode_service: geonode.services.models.Service
 
         """
+        # No layer meta? No - it never gets here?????
+        # so get_resource might be the problem then
+        # How is this different at all?
         layer_meta = self.get_resource(resource_id)
+        logger.debug("layer_meta: {}".format(layer_meta))
         if layer_meta:
             resource_fields = self._get_indexed_layer_fields(layer_meta)
             keywords = resource_fields.pop("keywords")
@@ -231,7 +265,7 @@ class MapstoryArcMapServiceHandler(base.ServiceHandlerBase):
             # self._create_layer_legend_link(geonode_layer)
         else:
             raise RuntimeError(
-                "Resource {!r} cannot be harvested".format(resource_id))
+                "Resource layers {0} had no layer_meta {1}".format(self.parsed_service.layers, layer_meta))
 
     def has_resources(self):
         try:
@@ -245,11 +279,14 @@ class MapstoryArcMapServiceHandler(base.ServiceHandlerBase):
         return geonode_projection in "EPSG:{}".format(srs)
 
     def _get_indexed_layer_fields(self, layer_meta):
-        srs = "EPSG:%s" % layer_meta.extent.spatialReference.wkid
-        bbox = utils.decimal_encode([layer_meta.extent.xmin,
-                                     layer_meta.extent.ymin,
-                                     layer_meta.extent.xmax,
-                                     layer_meta.extent.ymax])
+        # no spatialreference
+        # Need to use the epsg_string function Exhcange made
+        # spatialReference is probably not a thing anymore
+        # srs = "EPSG:%s" % layer_meta.extent.spatialReference.wkid
+        bbox = utils.decimal_encode([layer_meta.extent['xmin'],
+                                     layer_meta.extent['ymin'],
+                                     layer_meta.extent['xmax'],
+                                     layer_meta.extent['ymax']])
         return {
             "name": layer_meta.title,
             "store": self.name,
@@ -263,7 +300,7 @@ class MapstoryArcMapServiceHandler(base.ServiceHandlerBase):
             "bbox_x1": bbox[2],
             "bbox_y0": bbox[1],
             "bbox_y1": bbox[3],
-            "srid": srs,
+            "srid": epsg_string(layer_meta.extent),
             "keywords": ['ESRI', 'ArcGIS REST MapServer', layer_meta.title],
         }
 
@@ -345,7 +382,7 @@ class MapstoryArcImageServiceHandler(MapstoryArcMapServiceHandler):
 
         self.proxy_base = None
         self.url = url
-        self.parsed_service = ArcImageService(self.url, headers=headers)
+        self.parsed_service = ArcImageService(self.url, add_headers=headers)
         extent, srs = utils.get_esri_extent(self.parsed_service)
         try:
             _sname = utils.get_esri_service_name(self.url)

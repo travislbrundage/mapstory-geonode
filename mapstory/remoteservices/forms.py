@@ -61,7 +61,8 @@ class MapstoryCreateServiceForm(CreateServiceForm):
     def clean(self):
         """Validates form fields that depend on each other"""
         # TODO: Should I call super here?
-        super(MapstoryCreateServiceForm, self).clean()
+        # Answer: No
+        # super(MapstoryCreateServiceForm, self).clean()
         url = self.cleaned_data.get("url")
         service_type = self.cleaned_data.get("type")
         if url is not None and service_type is not None:

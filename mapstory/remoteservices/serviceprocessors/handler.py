@@ -108,4 +108,5 @@ def get_service_handler(base_url, proxy_base=None,
             logger.exception(
                 msg="Could not parse service {!r}".format(base_url))
             raise
+    # raise RuntimeError("Our base_url was {0} and headers was {1} for service {2}".format(base_url, headers, service))
     return service
