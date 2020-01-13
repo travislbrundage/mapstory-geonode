@@ -47,10 +47,5 @@ Pillow==5.1.0
 # for user-ordering of wildcard hostname:port mappings
 django-ordered-model==1.4.3
 git+https://github.com/planetfederal/django-ssl-pki
-# This can be arcrest==10.3 && I think is same thing?
-# Do I need these?
-geonode-arcrest==10.2
-# ArcREST-Package==3.5.9
-# The below probably overrides the above, which is probably a dependency of above
-# Something about this breaks everything where the above package don't
+# Override of ArcREST-Package which will allow headers
 git+https://github.com/planetfederal/ArcREST.git@4945fd1b3325a5f1b3e7215833fd8fb1cebeb0b2#subdirectory=src
