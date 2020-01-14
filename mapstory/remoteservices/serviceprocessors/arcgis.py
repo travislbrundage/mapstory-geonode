@@ -122,6 +122,10 @@ class MapstoryArcMapServiceHandler(base.ServiceHandlerBase):
         self.proxy_base = None
         self.url = url
         # ONLY Authorization is messing it up due to the bearer token, why?
+        # Workaround - create a duplicate
+        dupe = ArcMapService(self.url)
+        # dupe_layers = dupe.layers
+        # Now this will work with headers
         self.parsed_service = ArcMapService(self.url, add_headers=headers)
         extent, srs = utils.get_esri_extent(self.parsed_service)
         try:
