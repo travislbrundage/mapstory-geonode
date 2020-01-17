@@ -23,6 +23,7 @@
 import logging
 from urllib import quote
 from urlparse import urljoin
+from decimal import Decimal
 
 from django.conf import settings
 from django.template.defaultfilters import slugify
@@ -51,6 +52,21 @@ except ImportError:
     proxy_route = None
 
 logger = logging.getLogger(__name__)
+
+
+def decimal_encode(bbox):
+    _bbox = []
+    for o in bbox:
+        try:
+            _bbox.append("{0:.15f}".format(round(float(o), 2)))
+        except ValueError:
+            logger.debug("Found non-numeric value in bbox: {0}".format(o))
+    if len(_bbox) < 4:
+        logger.error("Did not find enough elements in bbox: {0}".format(bbox))
+        # TODO: Is this the right thing to do here?
+        while len(_bbox) < 4:
+            _bbox.append("0")
+    return _bbox
 
 
 class MapstoryWmsServiceHandler(WmsServiceHandler):
@@ -147,6 +163,47 @@ class MapstoryWmsServiceHandler(WmsServiceHandler):
                 "link_type": 'image',
             }
         )
+
+    def _get_cascaded_layer_fields(self, geoserver_resource):
+        name = geoserver_resource.name
+        workspace = geoserver_resource.workspace.name
+        store = geoserver_resource.store
+
+        bbox = decimal_encode(geoserver_resource.native_bbox)
+        return {
+            "name": name,
+            "workspace": workspace,
+            "store": store.name,
+            "typename": "{}:{}".format(workspace, name),
+            "alternate": "{}:{}".format(workspace, name),
+            "storeType": "remoteStore",  # store.resource_type,
+            "title": geoserver_resource.title,
+            "abstract": geoserver_resource.abstract,
+            "bbox_x0": bbox[0],
+            "bbox_x1": bbox[1],
+            "bbox_y0": bbox[2],
+            "bbox_y1": bbox[3],
+        }
+
+    def _get_indexed_layer_fields(self, layer_meta):
+        bbox = decimal_encode(layer_meta.boundingBoxWGS84)
+        bbox_y1 = bbox[3]
+
+        return {
+            "name": layer_meta.name,
+            "store": self.name,
+            "storeType": "remoteStore",
+            "workspace": "remoteWorkspace",
+            "typename": layer_meta.name,
+            "alternate": layer_meta.name,
+            "title": layer_meta.title,
+            "abstract": layer_meta.abstract,
+            "bbox_x0": bbox[0],
+            "bbox_x1": bbox[2],
+            "bbox_y0": bbox[1],
+            "bbox_y1": bbox[3],
+            "keywords": [keyword[:100] for keyword in layer_meta.keywords],
+        }
 
 
 class MapstoryServiceHandler(GeoNodeServiceHandler):

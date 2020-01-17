@@ -105,6 +105,7 @@ def epsg_string(bbox):
 
     return None
 
+
 class MapstoryArcMapServiceHandler(base.ServiceHandlerBase):
     """Remote service handler for ESRI:ArcGIS:MapServer services
 
@@ -123,11 +124,19 @@ class MapstoryArcMapServiceHandler(base.ServiceHandlerBase):
         self.url = url
         # ONLY Authorization is messing it up due to the bearer token, why?
         # Workaround - create a duplicate
-        dupe = ArcMapService(self.url)
+        # dupe = ArcMapService(self.url)
         # dupe_layers = dupe.layers
         # Now this will work with headers
+        # What is the url here? It is the proxied pki url, should it be tho?
+        # Yes, although that is giving problems due to authentication
+        # Does it need the headers to go through proxy w/authentication?
+        # What if I turned off that req at /pki ? can I?
+        # force bearer token
+        # from mapstory.utils import get_bearer_token
+        # headers = {'Authorization': 'Bearer {0}'.format(get_bearer_token())}
         self.parsed_service = ArcMapService(self.url, add_headers=headers)
-        extent, srs = utils.get_esri_extent(self.parsed_service)
+        # This is just straight never used?
+        # extent, srs = utils.get_esri_extent(self.parsed_service)
         try:
             _sname = utils.get_esri_service_name(self.url)
             _title_safe = safe(os.path.basename(os.path.normpath(_sname)))
@@ -386,8 +395,8 @@ class MapstoryArcImageServiceHandler(MapstoryArcMapServiceHandler):
 
         self.proxy_base = None
         self.url = url
-        self.parsed_service = ArcImageService(self.url, add_headers=headers)
-        extent, srs = utils.get_esri_extent(self.parsed_service)
+        self.parsed_service = ArcImageService(self.url)
+        # extent, srs = utils.get_esri_extent(self.parsed_service)
         try:
             _sname = utils.get_esri_service_name(self.url)
             _title_safe = safe(os.path.basename(os.path.normpath(_sname)))

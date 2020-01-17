@@ -28,6 +28,7 @@ from django.conf import settings
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.template import loader
 from django.utils.translation import ugettext as _
+from django.core.exceptions import ValidationError
 
 from geonode.services import enumerations
 from geonode.services.models import Service, HarvestJob
@@ -52,7 +53,13 @@ def register_service(request):
             service_handler = form.cleaned_data["service_handler"]
             service = service_handler.create_geonode_service(
                 owner=request.user)
-            service.full_clean()
+            # TODO: Any issue with just trying to proceed as normal?
+            try:
+                service.full_clean()
+            except ValidationError as e:
+                logger.warn("Got a validation error. Online resource: {0}\n"
+                            "ValidationError: {1}"
+                            .format(service.online_resource, e))
             service.save()
             service.keywords.add(*service_handler.get_keywords())
             service.set_default_permissions()

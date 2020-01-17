@@ -13,7 +13,7 @@ from mapstory.importers import UploadedLayerResource
 from mapstory.mapstory_profile.urls import urlpatterns as mapstory_profile_urls
 from mapstory.storylayers.urls import urlpatterns as layers_urls
 from mapstory.views import (GetPageView, IndexView, LeaderListView, SearchView,
-                            baselayer_view, maploom_new_map)
+                            baselayer_view, maploom_new_map, proxy)
 from osgeo_importer.urls import urlpatterns as importer_urlpatterns
 from tastypie.api import Api
 
@@ -60,6 +60,7 @@ urlpatterns = patterns('',
                            template_name='robots.txt', content_type="text/plain"), name='robots'),
                        url(r'^baselayers$',
                            baselayer_view, name='baselayer_view'),
+                       url(r'^proxy/', proxy),
                        # TODO: Uncomment when we've finished arcgis fixes
                        url(r'^services/',
                            include('mapstory.remoteservices.urls')),
